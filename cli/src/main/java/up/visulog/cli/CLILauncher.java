@@ -30,6 +30,7 @@ public class CLILauncher {
     static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
         //gitPath takes the current path visulog is located at.
         var gitPath = FileSystems.getDefault().getPath(".");
+        var configFilePath = FileSystems.getDefault().getPath(".");
         var plugins = new HashMap<String, PluginConfig>();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
@@ -71,7 +72,7 @@ public class CLILauncher {
                 gitPath = FileSystems.getDefault().getPath(arg);
             }
         }
-        return Optional.of(new Configuration(gitPath, plugins));
+        return Optional.of(new Configuration(gitPath, configFilePath, plugins));
     }
 
     private static void displayHelpAndExit() {

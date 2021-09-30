@@ -6,4 +6,8 @@ import java.util.HashMap;
 //This makes it possible for the user to customize a lot of variables used by the plugin
 public class PluginConfig {
 	private final HashMap<String, PluginSetting> settingMap = new HashMap<String, PluginSetting>();
+	private String name;
+	
+	public HashMap<String, PluginSetting> getSettings() { return new HashMap<String, PluginSetting>(settingMap); }
+	public String getName() { return name; }
 }
