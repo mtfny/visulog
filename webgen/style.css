@@ -1,0 +1,15 @@
+* {
+    font-family: "Raleway", sans-serif;  /*font-style*/
+}
+
+body, ol, ul {
+    list-style: none;
+    vertical-align: baseline;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+}
+
+a {
+    text-decoration: none;              /*Remove blue text for hypertext*/
+}
