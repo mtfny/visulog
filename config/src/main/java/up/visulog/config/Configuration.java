@@ -15,14 +15,14 @@ import java.util.Map;
 public class Configuration {
 
     private final Path gitPath;
-    private final Path configFilePath;
-    private final Map<String, PluginConfig> plugins;
+    private final Path configFilePath; //Directory where the configuration file will be stored
+    private final HashMap<String, PluginConfig> plugins;
     private final String configFileName = "config.txt";
 
-    public Configuration(Path gitPath, Path cfPath, Map<String, PluginConfig> plugins) {
+    public Configuration(Path gitPath, Path cfPath, HashMap<String, PluginConfig> plugins) {
         this.gitPath = gitPath;
         this.configFilePath = cfPath;
-        this.plugins = Map.copyOf(plugins);
+        this.plugins = deepCopy(plugins);
     }
 
     public Path getGitPath() {
@@ -33,6 +33,7 @@ public class Configuration {
         return plugins;
     }
     
+    //Will save a file that contains all plugins variables that can be customized by the user
     public void saveConfigFile() {
     	File configFile = getConfigFile();
     	
@@ -42,18 +43,12 @@ public class Configuration {
 			
 			for(Map.Entry<String, PluginConfig> entry : plugins.entrySet()) {
 				PluginConfig plugin = entry.getValue();
-				toWrite = plugin.getName() + ": ";
-				
-				HashMap<String, PluginSetting> settingMap = plugin.getSettings();
-				for(Map.Entry<String, PluginSetting> settingEntry : settingMap.entrySet()) {
-					PluginSetting setting = settingEntry.getValue();
-					String settingName = settingEntry.getKey();
-					toWrite = toWrite + settingName + " -" + setting.getValue().toString();
-				}
+				toWrite = toWrite + plugin.getName() + ": " + plugin.numSettingsToString() + plugin.stringSettingsToString() + '\n';
 			}
 			
 			writer.write(toWrite);
 			writer.close();
+			System.out.println("Config file saved at : " + configFile.getAbsolutePath());
 		}
     	
     	catch (IOException e) {
@@ -63,6 +58,7 @@ public class Configuration {
     	
     }
     
+    //Returns configuration file if it exists, else it will create one
     public File getConfigFile() {
 		File configFile = new File(configFilePath + configFileName);
     	try {
@@ -74,5 +70,18 @@ public class Configuration {
     	}
     	
 		return configFile;
+    }
+    
+    //Returns a deep copy of the plugins map
+    public HashMap<String, PluginConfig> deepCopy(HashMap<String, PluginConfig> m){
+    	HashMap<String, PluginConfig> res = new HashMap<String, PluginConfig>();
+    	
+    	for(Map.Entry<String, PluginConfig> entry : m.entrySet()) {
+    		String s = new String(entry.getKey());
+    		PluginConfig p = new PluginConfig(entry.getValue());
+    		res.put(s, p);
+    	}
+    	
+    	return res;
     }
 }
