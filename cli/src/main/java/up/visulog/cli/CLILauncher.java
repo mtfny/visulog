@@ -28,7 +28,7 @@ public class CLILauncher {
 
     //So what this code do is take the command line we entered from the terminal, and make a new configuration.
     static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
-        //gitPath takes the current path visulog is located at.
+        //gitPath takes the current path visulog is located at, wich is it's own folder.
         var gitPath = FileSystems.getDefault().getPath(".");
         var plugins = new HashMap<String, PluginConfig>();
 
@@ -43,9 +43,8 @@ public class CLILauncher {
                     String pName = parts[0];
                     String pValue = parts[1];
                     switch (pName) {
-                        //This is the argument that says we will add commit. This is VERY IMPORTANT, as when we will add new
-                        //plugins we will need to modify this code to check which plugin we are adding to our gradle.
                         case "--addPlugin":
+                            
                             // TODO: parse argument and make an instance of PluginConfig
 
                             // Let's just trivially do this, before the TODO is fixed:
@@ -54,7 +53,6 @@ public class CLILauncher {
                             });
 
                             break;
-                        
                         case "--loadConfigFile":
                             // TODO (load options from a file)
                             break;
@@ -65,9 +63,11 @@ public class CLILauncher {
                             return Optional.empty();
                     }
                 }
-            } 
+            }
             
             else {
+                //Todo: Check if we are passing in parameters a directory that exists
+                //Check if there is a git repository in this directory
                 gitPath = FileSystems.getDefault().getPath(arg);
             }
         }
@@ -76,7 +76,14 @@ public class CLILauncher {
 
     private static void displayHelpAndExit() {
         System.out.println("Wrong command...");
-        //TODO: print the list of options and their syntax
+        System.out.println("\n The correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
+        System.out.println("For example:  [./gradlew run --args='. --addPlugin=countCommits']");
+
+        System.out.println("Here is the list of arguments you can write: ");
+        System.out.println("[--addPlugin]");
+        System.out.println("[--loadConfigFile]");
+        System.out.println("[--justSaveConfigFile]");
+
         System.exit(0);
     }
 }
