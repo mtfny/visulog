@@ -5,8 +5,10 @@ import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
 
 import java.nio.file.FileSystems;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
+
 
 public class CLILauncher {
 
@@ -64,22 +66,31 @@ public class CLILauncher {
                     }
                 }
             }
-            
             else {
-                //Todo: Check if we are passing in parameters a directory that exists
-                //Check if there is a git repository in this directory
-                gitPath = FileSystems.getDefault().getPath(arg);
+                //Checks if we are passing a directory in the parameters. If the directory exists we 
+                //change the gitPath to the path we are passing in the parameters.
+                String path = arg;
+                if (check_directory_exists(path) == true) gitPath = FileSystems.getDefault().getPath(path);
+                else return Optional.empty();
             }
         }
         return Optional.of(new Configuration(gitPath, plugins));
     }
 
+    public static boolean check_directory_exists(String path) {
+        File file = new File(path);
+        if (file.isDirectory()) {
+            return true;
+        }
+        return false;
+    }
+
     private static void displayHelpAndExit() {
         System.out.println("Wrong command...");
-        System.out.println("\n The correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
+        System.out.println("\nThe correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
         System.out.println("For example:  [./gradlew run --args='. --addPlugin=countCommits']");
 
-        System.out.println("Here is the list of arguments you can write: ");
+        System.out.println("\nHere is the list of arguments you can write: ");
         System.out.println("[--addPlugin]");
         System.out.println("[--loadConfigFile]");
         System.out.println("[--justSaveConfigFile]");
