@@ -31,6 +31,7 @@ public class CountCommitsPerAuthorPlugin implements AnalyzerPlugin {
 
     @Override
     public Result getResult() {
+    	//If the analysis hasn't already been run, it is run and only then is the result returned
         if (result == null) run();
         return result;
     }
@@ -38,16 +39,19 @@ public class CountCommitsPerAuthorPlugin implements AnalyzerPlugin {
     static class Result implements AnalyzerPlugin.Result {
         private final Map<String, Integer> commitsPerAuthor = new HashMap<>();
 
+        //Method that returns the hashmap that contains the number of commits associated with each author 
         Map<String, Integer> getCommitsPerAuthor() {
             return commitsPerAuthor;
         }
 
         @Override
+        //Method that returns the commitsPerAuthor list in String form
         public String getResultAsString() {
             return commitsPerAuthor.toString();
         }
 
         @Override
+        //Method that returns a String which can then be used to display the commitsPerAuthor list as an html page
         public String getResultAsHtmlDiv() {
             StringBuilder html = new StringBuilder("<div>Commits per author: <ul>");
             for (var item : commitsPerAuthor.entrySet()) {
