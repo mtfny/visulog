@@ -32,6 +32,7 @@ public class CLILauncher {
     static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
         //gitPath takes the current path visulog is located at, wich is it's own folder.
         var gitPath = FileSystems.getDefault().getPath(".");
+        var configFilePath = FileSystems.getDefault().getPath(".");
         var plugins = new HashMap<String, PluginConfig>();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
@@ -74,7 +75,7 @@ public class CLILauncher {
                 else return Optional.empty();
             }
         }
-        return Optional.of(new Configuration(gitPath, plugins));
+        return Optional.of(new Configuration(gitPath, configFilePath, plugins));
     }
 
     public static boolean check_directory_exists(String path) {
