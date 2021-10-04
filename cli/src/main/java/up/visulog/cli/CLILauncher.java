@@ -5,8 +5,10 @@ import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
 
 import java.nio.file.FileSystems;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
+
 
 public class CLILauncher {
 
@@ -28,7 +30,7 @@ public class CLILauncher {
 
     //So what this code do is take the command line we entered from the terminal, and make a new configuration.
     static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
-        //gitPath takes the current path visulog is located at.
+        //gitPath takes the current path visulog is located at, wich is it's own folder.
         var gitPath = FileSystems.getDefault().getPath(".");
         var plugins = new HashMap<String, PluginConfig>();
 
@@ -43,9 +45,8 @@ public class CLILauncher {
                     String pName = parts[0];
                     String pValue = parts[1];
                     switch (pName) {
-                        //This is the argument that says we will add commit. This is VERY IMPORTANT, as when we will add new
-                        //plugins we will need to modify this code to check which plugin we are adding to our gradle.
                         case "--addPlugin":
+                            
                             // TODO: parse argument and make an instance of PluginConfig
 
                             // Let's just trivially do this, before the TODO is fixed:
@@ -54,7 +55,6 @@ public class CLILauncher {
                             });
 
                             break;
-                        
                         case "--loadConfigFile":
                             // TODO (load options from a file)
                             break;
@@ -65,18 +65,36 @@ public class CLILauncher {
                             return Optional.empty();
                     }
                 }
-            } 
-            
+            }
             else {
-                gitPath = FileSystems.getDefault().getPath(arg);
+                //Checks if we are passing a directory in the parameters. If the directory exists we 
+                //change the gitPath to the path we are passing in the parameters.
+                String path = arg;
+                if (check_directory_exists(path) == true) gitPath = FileSystems.getDefault().getPath(path);
+                else return Optional.empty();
             }
         }
         return Optional.of(new Configuration(gitPath, plugins));
     }
 
+    public static boolean check_directory_exists(String path) {
+        File file = new File(path);
+        if (file.isDirectory()) {
+            return true;
+        }
+        return false;
+    }
+
     private static void displayHelpAndExit() {
         System.out.println("Wrong command...");
-        //TODO: print the list of options and their syntax
+        System.out.println("\nThe correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
+        System.out.println("For example:  [./gradlew run --args='. --addPlugin=countCommits']");
+
+        System.out.println("\nHere is the list of arguments you can write: ");
+        System.out.println("[--addPlugin]");
+        System.out.println("[--loadConfigFile]");
+        System.out.println("[--justSaveConfigFile]");
+
         System.exit(0);
     }
 }
