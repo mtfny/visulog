@@ -2,6 +2,7 @@ package up.visulog.gitrawdata;
 
 import java.io.BufferedReader;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,15 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
+import java.math.BigInteger;
 
 public class Commit {
-    public final String id;
+    public final BigInteger id;
     public final Date date;
     public final String author;
     public final String description;
     public final String mergedFrom;
 
-    public Commit(String id, String author, Date date, String description, String mergedFrom) {
+    public Commit(BigInteger id, String author, Date date, String description, String mergedFrom) {
         this.id = id;
         this.author = author;
         this.date = date;
@@ -107,7 +109,7 @@ public class Commit {
     @Override
     public String toString() {
         return "Commit{" +
-                "id='" + id + '\'' +
+                "id='" + id.toString(16) + '\'' +
                 (mergedFrom != null ? ("mergedFrom...='" + mergedFrom + '\'') : "") + //TODO: find out if this is the only optional field
 	    ", date='" + date + '\'' +
                 ", author='" + author + '\'' +

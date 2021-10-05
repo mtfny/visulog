@@ -1,19 +1,26 @@
 package up.visulog.gitrawdata;
 
 import java.text.ParseException;
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
 public class CommitBuilder {
-    private final String id;
+    private final BigInteger id;
     private String author;
     private Date date;
     private String description;
     private String mergedFrom;
 
-    public CommitBuilder(String id) {
-        this.id = id;
+    public CommitBuilder(String id) { // This method stocks the commit's id into a decimal number. We'll use the method toString(int radius) from BigInteger to show the id in hexadecimal.
+    	String s=id.toUpperCase();
+    	BigInteger i=new BigInteger(s, 16);
+        this.id = i;
+    }
+    
+    public CommitBuilder(BigInteger id) {
+    	this.id=id;
     }
 
     public CommitBuilder setAuthor(String author) {
