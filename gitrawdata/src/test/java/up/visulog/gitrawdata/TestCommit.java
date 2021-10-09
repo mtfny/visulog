@@ -4,9 +4,9 @@ package up.visulog.gitrawdata;
 import java.io.IOException;
 
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.math.BigInteger;
+import java.io.BufferedReader;
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertTrue;
 
@@ -42,6 +42,18 @@ public class TestCommit {
 		Commit t= test.createCommit();
 		System.out.println("" + t.id);
 		System.out.println(t.toString());
+		FileSystem fs = FileSystems.getDefault();
+		Path chemin = fs.getPath("/home/marius/Cours/Projet/visulog");
+		BufferedReader br = Commit.executeGitCommand(chemin,"status");
+		String response = new String();
+		try {
+			for (String line; (line = br.readLine()) != null; response += line);
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+		
+		System.out.println(response);
 		
 		
 	}
