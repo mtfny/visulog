@@ -30,9 +30,9 @@ public class CLILauncher {
 
     //So what this code do is take the command line we entered from the terminal, and make a new configuration.
     static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
-        //gitPath takes the current path visulog is located at, wich is it's own folder.
-        var gitPath = FileSystems.getDefault().getPath(".");
-        var configFilePath = FileSystems.getDefault().getPath(".");
+        //gitPath takes the current path visulog is located at, which is it's own folder.
+        String gitPath = FileSystems.getDefault().getPath(".").toString();
+        String configFilePath = FileSystems.getDefault().getPath(".").toString();
         var plugins = new HashMap<String, PluginConfig>();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
@@ -71,7 +71,7 @@ public class CLILauncher {
                 //Checks if we are passing a directory in the parameters. If the directory exists we 
                 //change the gitPath to the path we are passing in the parameters.
                 String path = arg;
-                if (check_directory_exists(path) == true) gitPath = FileSystems.getDefault().getPath(path);
+                if (check_directory_exists(path) == true) gitPath = FileSystems.getDefault().getPath(path).toString();
                 else return Optional.empty();
             }
         }
