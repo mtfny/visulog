@@ -2,9 +2,11 @@ package up.visulog.gitrawdata;
 
 //import org.junit.Test;
 import java.io.IOException;
+
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.math.BigInteger;
+import java.io.BufferedReader;
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertTrue;
 
@@ -33,11 +35,25 @@ public class TestCommit {
 */
 	public static void main(String[]args) {
 		//new "setDate" method test
+		String id = "6304c1acdc1cbdeb8315528781896abc72a021b8";
 		String date="Tue Sep 21 12:30:53 2020 +0200";
-		CommitBuilder test = new CommitBuilder("01azezae");
+		CommitBuilder test = new CommitBuilder(id);
 		test.setDate(date);
 		Commit t= test.createCommit();
+		System.out.println("" + t.id);
 		System.out.println(t.toString());
+		FileSystem fs = FileSystems.getDefault();
+		Path chemin = fs.getPath("/home/marius/Cours/Projet/visulog");
+		BufferedReader br = Commit.executeGitCommand(chemin,"status");
+		String response = new String();
+		try {
+			for (String line; (line = br.readLine()) != null; response += line);
+			} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+		
+		System.out.println(response);
 		
 		
 	}
