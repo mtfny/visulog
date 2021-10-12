@@ -12,10 +12,16 @@ public class writeHTML {
     }
 
     public void createhtmlFile() throws IOException {
-        Path htmlPath = Path.of("test.html");
+    	//Create an object Path
+        Path htmlPath = Path.of("template.html");
+        //Convert template.html to String
         String htmlString = Files.readString(htmlPath);
+        //Replace "$replace" by the html div of this instance
         htmlString = htmlString.replace("$replace", this.htmlDiv);
-        BufferedWriter writer = new BufferedWriter(new FileWriter("template.html"));
+        //Create a new BufferedWriter who allow to write in a file
+        //Create also a new File HTML
+        BufferedWriter writer = new BufferedWriter(new FileWriter("newFile.html"));
+        //Write our string in the new File
         writer.write(htmlString);
         writer.close();
     }
