@@ -85,7 +85,7 @@ public class Configuration implements java.io.Serializable {
     	try {
     		File configFile = new File(configFilePath + configFileName);
     		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile));
-    		Configuration res = (Configuration)ois.readObject();
+    		Configuration res = (Configuration)ois.readObject();    		
     		ois.close();
     		System.out.println("Config file Loaded");
     		return res;
