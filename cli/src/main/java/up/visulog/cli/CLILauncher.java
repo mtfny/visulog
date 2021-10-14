@@ -57,11 +57,16 @@ public class CLILauncher {
 
                             break;
                         case "--loadConfigFile":
-                            // TODO (load options from a file)
-                            break;
+                            Configuration res = Configuration.loadConfigFile(configFilePath);
+                            if(check_directory_exists(res.getGitPath().toString()) == true)
+                            	return Optional.of(res);
+                            return Optional.empty();
+                            
                         case "--justSaveConfigFile":
-                            // TODO (save command line options to a file instead of running the analysis)
-                            break;
+                            Configuration toSave = new Configuration(gitPath, configFilePath, plugins);
+                            toSave.saveConfigFile();
+                            return Optional.empty();
+                            
                         default:
                             return Optional.empty();
                     }
