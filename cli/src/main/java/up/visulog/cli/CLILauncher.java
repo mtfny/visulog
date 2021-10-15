@@ -33,6 +33,7 @@ public class CLILauncher {
         //gitPath takes the current path visulog is located at, which is it's own folder.
         String gitPath = FileSystems.getDefault().getPath(".").toString();
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
+
         var plugins = new HashMap<String, PluginConfig>();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
@@ -73,19 +74,25 @@ public class CLILauncher {
                 }
             }
             else {
-                //Checks if we are passing a directory in the parameters. If the directory exists we 
-                //change the gitPath to the path we are passing in the parameters.
-                String path = arg;
-                if (check_directory_exists(path) == true) gitPath = FileSystems.getDefault().getPath(path).toString();
-                else return Optional.empty();
+                //If we aren't passing a command that exists. We are changing the value of gitpath to the 
+                //argument we passed to check if we are passing a directory in our command line.
+                gitPath = FileSystems.getDefault().getPath(arg).toString();
             }
         }
-        return Optional.of(new Configuration(gitPath, configFilePath, plugins));
+        //At the end we verify that everything is working by checking if the path in gitPath is
+        //in an existing directory or not.
+        if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins));
+        else return Optional.empty();
     }
 
     public static boolean check_directory_exists(String path) {
-        File file = new File(path);
-        if (file.isDirectory()) {
+        //First we check if there is a git directory using "file.isDirectory()" and then we check it there 
+        //is a .git repository in this repository.
+        File path_passed = new File(path);
+
+        if (path_passed.isDirectory()) {
+            File gitdirectory = new File(path + "/.git");
+            if (gitdirectory.isDirectory()) return true;
             return true;
         }
         return false;
