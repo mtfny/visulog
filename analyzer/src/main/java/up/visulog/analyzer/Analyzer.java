@@ -43,7 +43,7 @@ public class Analyzer {
     		try {
     			@SuppressWarnings("unchecked")
     			//The class object which corresponds to the class of the plugin we want to create is retrieved.
-    			Class<?> c = (Class<AnalyzerPlugin>)Class.forName(pluginName);
+    			Class<?> c = (Class<AnalyzerPlugin>)Class.forName("up.visulog.analyzer." + pluginName + "Plugin");
     			//The constructor(s) for this class are retrieved in an array.
     			Constructor<?>[] pluginConstructor = c.getConstructors();
     			//A new instance of the type of plugin we want to create is returned.
