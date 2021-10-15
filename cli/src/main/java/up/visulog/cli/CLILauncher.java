@@ -104,9 +104,9 @@ public class CLILauncher {
         System.out.println("For example:  [./gradlew run --args='. --addPlugin=countCommits']");
 
         System.out.println("\nHere is the list of arguments you can write: ");
-        System.out.println("[--addPlugin]");
-        System.out.println("[--loadConfigFile]");
-        System.out.println("[--justSaveConfigFile]");
+        System.out.println("[--addPlugin] : Rajoute un plugin.");
+        System.out.println("[--loadConfigFile] : Sauvegarde vos paramètres et quitte le programme.");
+        System.out.println("[--justSaveConfigFile] : Charge vos paramètres depuis un fichier.");
 
         System.exit(0);
     }
