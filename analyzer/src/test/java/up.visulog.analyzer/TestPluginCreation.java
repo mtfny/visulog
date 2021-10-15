@@ -1,27 +1,22 @@
-import java.util.Map;
 import java.util.HashMap;
 import up.visulog.config.*;
 import up.visulog.analyzer.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class TestPluginCreation {
 
 	//This class aims to test the creation of plugins via the makePlugin method of the Analyzer class.
 	public static void main(String[] args) {
 		
-		Map<String, PluginConfig> m = new HashMap<>();
+		HashMap<String, PluginConfig> m = new HashMap<>();
 		
-		PluginConfig d = new TestPluginConfig();
+		PluginConfig d = new PluginConfig();
 		
 		//Test with a String that indicates the name of an existing AnalyzerPlugin class
 		m.put("CountCommitsPerAuthor", d);
 		//Test with a String that doesn't indicate the name of an existing AnalyzerPlugin
 		m.put("CountCommits", d);
 		
-		Path p = Paths.get("/home");
-		
-		Configuration c = new Configuration(p, m);
+		Configuration c = new Configuration("", "", m);
 		Analyzer a = new Analyzer(c);
 		
 		a.computeResults();
