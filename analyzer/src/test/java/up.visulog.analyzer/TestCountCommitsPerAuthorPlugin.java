@@ -1,4 +1,4 @@
-package up.visulog.analyzer;
+//package up.visulog.analyzer;
 
 import org.junit.Test;
 import up.visulog.gitrawdata.Commit;
