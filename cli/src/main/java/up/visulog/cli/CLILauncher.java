@@ -18,6 +18,7 @@ public class CLILauncher {
 
         //If the configuration was correctly created :
         if (config.isPresent()) {
+            
             //We create a new analyzer object using this configuration as an argument.
             var analyzer = new Analyzer(config.get());
             //The analyzer then runs all the plugins.
@@ -33,6 +34,7 @@ public class CLILauncher {
         //gitPath takes the current path visulog is located at, which is it's own folder.
         String gitPath = FileSystems.getDefault().getPath(".").toString();
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
+
         var plugins = new HashMap<String, PluginConfig>();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
@@ -46,10 +48,12 @@ public class CLILauncher {
                     String pName = parts[0];
                     String pValue = parts[1];
                     switch (pName) {
-                        case "--addPlugin":
-                            
-                            // TODO: parse argument and make an instance of PluginConfig
+                        case "--help" :
+                            help_command();
+                            break;
 
+                        case "--addPlugin":
+                            // TODO: parse argument and make an instance of PluginConfig.
                             // Let's just trivially do this, before the TODO is fixed:
 
                             if (pValue.equals("countCommits")) plugins.put("countCommits", new PluginConfig() {
@@ -73,19 +77,25 @@ public class CLILauncher {
                 }
             }
             else {
-                //Checks if we are passing a directory in the parameters. If the directory exists we 
-                //change the gitPath to the path we are passing in the parameters.
-                String path = arg;
-                if (check_directory_exists(path) == true) gitPath = FileSystems.getDefault().getPath(path).toString();
-                else return Optional.empty();
+                //If we aren't passing a command that exists. We are changing the value of gitpath to the 
+                //argument we passed to check if we are passing a directory in our command line.
+                gitPath = FileSystems.getDefault().getPath(arg).toString();
             }
         }
-        return Optional.of(new Configuration(gitPath, configFilePath, plugins));
+        //At the end we verify that everything is working by checking if the path in gitPath is
+        //in an existing directory or not.
+        if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins));
+        else return Optional.empty();
     }
 
     public static boolean check_directory_exists(String path) {
-        File file = new File(path);
-        if (file.isDirectory()) {
+        //First we check if there is a git directory using "file.isDirectory()" and then we check it there 
+        //is a .git repository in this repository.
+        File path_passed = new File(path);
+
+        if (path_passed.isDirectory()) {
+            File gitdirectory = new File(path + "/.git");
+            if (gitdirectory.isDirectory()) return true;
             return true;
         }
         return false;
@@ -96,11 +106,32 @@ public class CLILauncher {
         System.out.println("\nThe correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
         System.out.println("For example:  [./gradlew run --args='. --addPlugin=countCommits']");
 
-        System.out.println("\nHere is the list of arguments you can write: ");
-        System.out.println("[--addPlugin]");
-        System.out.println("[--loadConfigFile]");
-        System.out.println("[--justSaveConfigFile]");
+        System.out.println("\nHere is the list of commands you can type: ");
+        System.out.println("[--help] : Display the list of every command and plugin with every argument possible.");
+        System.out.println("[--addPlugin] : Adds a plugin.");
+        System.out.println("[--loadConfigFile] : Saves your parameters and quits the program.");
+        System.out.println("[--justSaveConfigFile] : Loads your parameters from a file.");
 
+        System.exit(0);
+    }   
+
+    private static void help_command() {
+        System.out.println("\nTo use gradlew the correct syntax is : [./gradlew run --args='here are my args']");
+        System.out.println("You can either pass a command in the arguments or the path to a directory.");
+        System.out.println("The path to your directory must contain a .git directory or else you will get an error message.");
+
+        System.out.println("\n\n Here is a list of commands you can type: ");
+
+        System.out.println("\n[--help] : Display this exact list.");
+
+        System.out.println("\n[--addPlugin] : Adds a plugin. Takes a plugin name as a parameter.");
+        System.out.println("    - [--addPlugin=countCommits] Counts the number of commits made.");
+
+        System.out.println("\n[--loadConfigFile] : Saves your parameters and quits the program.");
+
+        System.out.println("\n[--justSaveConfigFile] : Loads your parameters from a file.");
+
+        System.out.println("");
         System.exit(0);
     }
 }
