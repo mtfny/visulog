@@ -3,11 +3,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class writeHTML {
     private String htmlDiv;
 
-    public writeHTML(String html) {
+    public writeHTML(AnalyzerResult result) {
+        String html = "";
+        List<AnalyzerPlugin.Result> subResult = result.getSubResults();
+        for (int i = 0; i < subResult.size(); i++) {
+            html += subResult.get(i).getResultAsHtmlDiv() + "\n";
+        }
         this.htmlDiv = html;
     }
 
@@ -25,5 +31,4 @@ public class writeHTML {
         writer.write(htmlString);
         writer.close();
     }
-
 }
