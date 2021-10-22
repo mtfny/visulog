@@ -4,19 +4,27 @@ import java.util.Map;
 
 //Each class that defines the configuration of a plugin extends this class
 //This makes it possible for the user to customize a lot of variables used by the plugin
-public class PluginConfig implements java.io.Serializable {
-	private final HashMap<String, Integer> numSettings = new HashMap<String, Integer>();
-	private final HashMap<String, String> stringSettings = new HashMap<String, String>();
+public abstract class PluginConfig implements java.io.Serializable {
+	protected Map<String, Integer> numSettings = new HashMap<String, Integer>();
+	protected Map<String, String> stringSettings = new HashMap<String, String>();
 	
-	public HashMap<String, Integer> getNumSettings() { return new HashMap<String, Integer>(numSettings); }
-	public HashMap<String, String> getStringSettings() { return new HashMap<String, String>(stringSettings); }
+	public Map<String, Integer> getNumSettings() { return new HashMap<String, Integer>(numSettings); }
+	public Map<String, String> getStringSettings() { return new HashMap<String, String>(stringSettings); }
 	
 	public PluginConfig() {
 		
 	}
 	
+	public PluginConfig(Map<String, Integer> numSettings, Map<String, String> stringSettings) {
+		this.numSettings = new HashMap<String, Integer>(numSettings);
+		this.stringSettings = new HashMap<String, String>(stringSettings);
+	}
+	
+	protected abstract PluginConfig clone();
+	protected abstract void configure(); //Fonction dans laquelle le pluginConfig peut demander les valeurs dont il a besoin via ligne de commande
+	
 	//Used to create a deep copy of this class
-	public PluginConfig(PluginConfig p) {		
+	/*public PluginConfig(PluginConfig p) {		
 		for(Map.Entry<String, Integer> entry : p.numSettings.entrySet()) {
 			String s = new String(entry.getKey());
 			Integer i = entry.getValue();
@@ -28,28 +36,6 @@ public class PluginConfig implements java.io.Serializable {
 			String s2 = new String(entry.getValue());
 			this.stringSettings.put(s1, s2);
 		}
-	}
-	
-	/*public String numSettingsToString() {
-		String toWrite = "";
-		for(Map.Entry<String, Integer> settingEntry : numSettings.entrySet()) {
-			Integer setting = settingEntry.getValue();
-			String settingName = settingEntry.getKey();
-			toWrite = toWrite + settingName + " -" + setting.toString() + "; ";
-		}
-		
-		return toWrite;
-	}
-	
-	public String stringSettingsToString() {
-		String toWrite = "";
-		for(Map.Entry<String, String> settingEntry : stringSettings.entrySet()) {
-			String setting = settingEntry.getValue();
-			String settingName = settingEntry.getKey();
-			toWrite = toWrite + settingName + " -" + setting.toString() + "; ";
-		}
-		
-		return toWrite;
 	}*/
 	
 	//Both of these functions are only for testing
