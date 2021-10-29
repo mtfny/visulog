@@ -1,3 +1,4 @@
+package up.visulog.analyzer;
 import java.util.HashMap;
 import up.visulog.config.*;
 import up.visulog.analyzer.*;
@@ -9,7 +10,7 @@ public class TestPluginCreation {
 		
 		HashMap<String, PluginConfig> m = new HashMap<>();
 		
-		PluginConfig d = new PluginConfig();
+		PluginConfig d = new CountCommitsPerAuthorConfig();
 		
 		//Test with a String that indicates the name of an existing AnalyzerPlugin class
 		m.put("CountCommitsPerAuthor", d);
