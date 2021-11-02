@@ -40,31 +40,6 @@ public class Configuration implements java.io.Serializable {
         return deepCopy(plugins);
     }
     
-    //Will save a file that contains all plugins variables that can be customized by the user
-    /*public void saveConfigFile() {
-    	File configFile = getConfigFile();
-    	
-    	try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(configFile));
-			String toWrite ="";
-			
-			for(Map.Entry<String, PluginConfig> entry : plugins.entrySet()) {
-				PluginConfig plugin = entry.getValue();
-				toWrite = toWrite + plugin.getName() + ": " + plugin.numSettingsToString() + plugin.stringSettingsToString() + '\n';
-			}
-			
-			writer.write(toWrite);
-			writer.close();
-			System.out.println("Config file saved at : " + configFile.getAbsolutePath());
-		}
-    	
-    	catch (IOException e) {
-			System.out.println("Configuration file couldn't be saved");
-			e.printStackTrace();
-		}
-    	
-    }*/
-    
     public void saveConfigFile() {
     	try {
     		File configFile = getConfigFile();
@@ -118,7 +93,7 @@ public class Configuration implements java.io.Serializable {
     	
     	for(Map.Entry<String, PluginConfig> entry : m.entrySet()) {
     		String s = new String(entry.getKey());
-    		PluginConfig p = new PluginConfig(entry.getValue());
+    		PluginConfig p = entry.getValue().clone();
     		res.put(s, p);
     	}
     	

@@ -3,6 +3,7 @@ package up.visulog.config;
 import java.nio.file.FileSystems;
 import java.util.HashMap;
 import java.util.Map;
+import up.visulog.analyzer.Analyzer;
 
 public class TestConfiguration {
     
@@ -11,8 +12,8 @@ public class TestConfiguration {
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
         HashMap<String, PluginConfig> plugins = new HashMap<String, PluginConfig>();
         
-        PluginConfig p1 = new PluginConfig();
-        PluginConfig p2 = new PluginConfig();
+        PluginConfig p1 = new CountCommitsPerAuthorConfig();
+        PluginConfig p2 = new CountCommitsPerAuthorConfig();
         p1.addSetting("Variable 1" , 10);
         p1.addSetting("Variable 2 t" , "test");
         p2.addSetting("Variable 3 test" , 5);
@@ -39,5 +40,11 @@ public class TestConfiguration {
 				System.out.println(stringP.getKey() + " " + stringP.getValue());
 			}
 		}
+		
+        HashMap<String, PluginConfig> pluginsTest = new HashMap<String, PluginConfig>();
+        pluginsTest.put("CountCommitsPerDay", new CountCommitsPerDayConfig());
+		Analyzer ana = new Analyzer(new Configuration(gitPath, configFilePath, pluginsTest));
+		var results = ana.computeResults();
+		System.out.println(results.toHTML());
 	}
 }
