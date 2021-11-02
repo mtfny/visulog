@@ -11,32 +11,8 @@ public abstract class PluginConfig implements java.io.Serializable {
 	public Map<String, Integer> getNumSettings() { return new HashMap<String, Integer>(numSettings); }
 	public Map<String, String> getStringSettings() { return new HashMap<String, String>(stringSettings); }
 	
-	public PluginConfig() {
-		
-	}
-	
-	public PluginConfig(Map<String, Integer> numSettings, Map<String, String> stringSettings) {
-		this.numSettings = new HashMap<String, Integer>(numSettings);
-		this.stringSettings = new HashMap<String, String>(stringSettings);
-	}
-	
 	protected abstract PluginConfig clone();
 	protected abstract void configure(); //Fonction dans laquelle le pluginConfig peut demander les valeurs dont il a besoin via ligne de commande
-	
-	//Used to create a deep copy of this class
-	/*public PluginConfig(PluginConfig p) {		
-		for(Map.Entry<String, Integer> entry : p.numSettings.entrySet()) {
-			String s = new String(entry.getKey());
-			Integer i = entry.getValue();
-			this.numSettings.put(s, i);
-		}
-		
-		for(Map.Entry<String, String> entry : p.stringSettings.entrySet()) {
-			String s1 = new String(entry.getKey());
-			String s2 = new String(entry.getValue());
-			this.stringSettings.put(s1, s2);
-		}
-	}*/
 	
 	//Both of these functions are only for testing
 	public void addSetting(String s, Integer i) {

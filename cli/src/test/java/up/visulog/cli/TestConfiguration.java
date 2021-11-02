@@ -1,9 +1,10 @@
-package up.visulog.config;
+package up.visulog.cli;
 
 import java.nio.file.FileSystems;
 import java.util.HashMap;
 import java.util.Map;
 import up.visulog.analyzer.Analyzer;
+import up.visulog.config.*;
 
 public class TestConfiguration {
     

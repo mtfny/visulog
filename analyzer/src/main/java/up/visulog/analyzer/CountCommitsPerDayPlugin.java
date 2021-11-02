@@ -4,7 +4,6 @@ import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import java.util.Calendar;
 
-import java.util.Date;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;

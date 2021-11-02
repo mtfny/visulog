@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
-/*import org.junit.Test;
-import static org.junit.Assert.*;*/
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 
 public class TestCountCommitsPerDayPlugin {
-	/*public static void main(String[] args) {
+	
+	@Test
+	public void commitsPerDayTests() {
 		checkCommitSum();
 		checkCommitNull();
 		checkCommitEmpty();
@@ -62,5 +64,5 @@ public class TestCountCommitsPerDayPlugin {
         CountCommitsPerDayPlugin.Result res = CountCommitsPerDayPlugin.processLog(log);
         assertEquals(res.getResultAsHtmlDiv(), "<div class=\"grid\"><p id=\"max-commit\" hidden></p><div class=\"months\"></div><div id=\"days\"></div></div>");
         assertEquals(res.getResultAsString(), "{}");
-    }*/
+    }
 }

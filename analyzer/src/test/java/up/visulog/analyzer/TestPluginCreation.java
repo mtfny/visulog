@@ -1,7 +1,7 @@
 package up.visulog.analyzer;
+
 import java.util.HashMap;
 import up.visulog.config.*;
-import up.visulog.analyzer.*;
 
 public class TestPluginCreation {
 
