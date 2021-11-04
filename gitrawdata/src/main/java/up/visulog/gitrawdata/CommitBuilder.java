@@ -21,7 +21,6 @@ public class CommitBuilder {
     	}else {
     		this.id=new BigInteger("0",16);
     	}
-    	
     }
     
     public CommitBuilder(BigInteger id) {
