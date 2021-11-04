@@ -15,8 +15,13 @@ public class CommitBuilder {
 
     public CommitBuilder(String id) { // This method stocks the commit's id into a decimal number. We'll use the method toString(int radius) from BigInteger to show the id in hexadecimal.
     	String s=id.toUpperCase();
+    	if(s.length()>0) {
     	BigInteger i=new BigInteger(s, 16);
         this.id = i;
+    	}else {
+    		this.id=new BigInteger("0",16);
+    	}
+    	
     }
     
     public CommitBuilder(BigInteger id) {
