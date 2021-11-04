@@ -2,19 +2,14 @@ package up.visulog.config;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Configuration implements java.io.Serializable {
@@ -22,10 +17,10 @@ public class Configuration implements java.io.Serializable {
 	//Paths are stored as a String so they can be serializable
     private final String gitPath;
     private final String configFilePath; //Directory where the configuration file will be stored
-    private final HashMap<String, PluginConfig> plugins;
+    private final Map<String, PluginConfig> plugins;
     private static final String configFileName = "config.txt";
 
-    public Configuration(String gitPath, String cfPath, HashMap<String, PluginConfig> plugins) {
+    public Configuration(String gitPath, String cfPath, Map<String, PluginConfig> plugins) {
         this.gitPath = gitPath;
         this.configFilePath = cfPath;
         this.plugins = deepCopy(plugins);
@@ -77,6 +72,7 @@ public class Configuration implements java.io.Serializable {
     private File getConfigFile() {
 		File configFile = new File(configFilePath + configFileName);
     	try {
+    		//Doesn't do anything if file already exists
     		configFile.createNewFile();
     	}
     	
@@ -88,8 +84,8 @@ public class Configuration implements java.io.Serializable {
     }
     
     //Returns a deep copy of the plugins map
-    private HashMap<String, PluginConfig> deepCopy(HashMap<String, PluginConfig> m){
-    	HashMap<String, PluginConfig> res = new HashMap<String, PluginConfig>();
+    private Map<String, PluginConfig> deepCopy(Map<String, PluginConfig> m){
+    	Map<String, PluginConfig> res = new HashMap<String, PluginConfig>();
     	
     	for(Map.Entry<String, PluginConfig> entry : m.entrySet()) {
     		String s = new String(entry.getKey());
