@@ -1,14 +1,14 @@
 package up.visulog.gitrawdata;
 
 import java.io.BufferedReader;
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Date;
 import java.math.BigInteger;
@@ -111,10 +111,11 @@ public class Commit {
 
     @Override
     public String toString() {
+    	SimpleDateFormat s= new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
         return "Commit{" +
                 "id='" + id.toString(16) + '\'' +
                 (mergedFrom != null ? ("mergedFrom...='" + mergedFrom + '\'') : "") + //TODO: find out if this is the only optional field
-	    ", date='" + date + '\'' +
+	    ", date='" + s.format(date).toString() + '\'' +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 '}';
