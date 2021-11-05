@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import up.visulog.analyzer.*;
 
 public class writeHTML {
     private String htmlDiv;
