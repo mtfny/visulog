@@ -4,6 +4,7 @@ import up.visulog.analyzer.Analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
 import up.visulog.config.CountCommitsPerAuthorConfig;
+import up.visulog.config.CountCommitsPerDayConfig;
 
 import java.nio.file.FileSystems;
 import java.io.File;
@@ -57,10 +58,21 @@ public class CLILauncher {
                             // TODO: parse argument and make an instance of PluginConfig.
                             // Let's just trivially do this, before the TODO is fixed:
 
-                            if (pValue.equals("countCommits")) plugins.put("countCommits", new CountCommitsPerAuthorConfig() {
-                            });
+                            if (pValue.equals("countCommits")) {
+                                plugins.put("countCommits", new CountCommitsPerAuthorConfig());
+                            }
+                            else if (pValue.equals("countCommitsPerAuthor")) {
+                                plugins.put("countCommits", new CountCommitsPerAuthorConfig());
+                            }
+                            else if (pValue.equals("countCommitsPerDay")) {
+                                plugins.put("countCommits", new CountCommitsPerDayConfig());
+                            }
+                            else {
+                                System.out.println("\nERROR : Plugin doesn't exist");
+                            }
 
                             break;
+
                         case "--loadConfigFile":
                             Configuration res = Configuration.loadConfigFile(configFilePath);
                             if(check_directory_exists(res.getGitPath().toString()) == true)
