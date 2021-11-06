@@ -58,14 +58,11 @@ public class CLILauncher {
                             // TODO: parse argument and make an instance of PluginConfig.
                             // Let's just trivially do this, before the TODO is fixed:
 
-                            if (pValue.equals("countCommits")) {
-                                plugins.put("countCommits", new CountCommitsPerAuthorConfig());
+                            if (pValue.equals("CountCommitsPerAuthor")) {
+                                plugins.put("CountCommitsPerAuthor", new CountCommitsPerAuthorConfig());
                             }
-                            else if (pValue.equals("countCommitsPerAuthor")) {
-                                plugins.put("countCommits", new CountCommitsPerAuthorConfig());
-                            }
-                            else if (pValue.equals("countCommitsPerDay")) {
-                                plugins.put("countCommits", new CountCommitsPerDayConfig());
+                            else if (pValue.equals("CountCommitsPerDay")) {
+                                plugins.put("CountCommitsPerDay", new CountCommitsPerDayConfig());
                             }
                             else {
                                 System.out.println("\nERROR : Plugin doesn't exist");
@@ -99,7 +96,7 @@ public class CLILauncher {
         //in an existing directory or not.
         if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins));
         else return Optional.empty();
-    }
+    }   
 
     public static boolean check_directory_exists(String path) {
         //First we check if there is a git directory using "file.isDirectory()" and then we check it there 
