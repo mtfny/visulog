@@ -37,14 +37,8 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
 
     @Override
     public void run() {
-    	if(configuration != null) {
+    	if(configuration != null)
     		result = processLog(Commit.parseLogFromCommand(configuration.getGitPath()));
-    		try {
-    			Thread.sleep(100);
-    		} catch(InterruptedException e) {
-    			e.printStackTrace();
-    		}
-    	}
     }
 
     @Override
