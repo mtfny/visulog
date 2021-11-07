@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ ! -n $1 ]
+then
+
+   echo "there is no parameter"
+
+elif [ "$1" = "-n" ]
+then
+
+  #a command line that calculates the number of files
+  num=$(find . -type f | grep -cv ".*/\..*")
+  echo "$num"
+
+elif [ "$1" = "-N" ]
+then
+  #a command line that calculates the number of files including the hidden ones
+  num=$(find . -type f | wc -l)
+  echo "$num"
+
+
+else
+   echo "parametre unrecognized"
+fi
