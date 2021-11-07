@@ -1,20 +1,23 @@
 package up.visulog.cli;
 
 import up.visulog.analyzer.Analyzer;
+import up.visulog.webgen.writeHTML;
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
 
 
 import java.nio.file.FileSystems;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 
 import java.lang.reflect.*;
+import java.net.URISyntaxException;
 
 public class CLILauncher {
 
-    public static void main(String[] args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, URISyntaxException {
         //Creates a new configuration with the gitpath and the plugins as arguments from main.
         var config = makeConfigFromCommandLineArgs(args);
 
@@ -26,7 +29,9 @@ public class CLILauncher {
             //The analyzer then runs all the plugins.
             var results = analyzer.computeResults();
 
-            System.out.println(results.toHTML());
+            writeHTML writer = new writeHTML(results);
+            writer.createhtmlFile();
+            System.out.println("Success");
         } 
         else displayHelpAndExit();
     }

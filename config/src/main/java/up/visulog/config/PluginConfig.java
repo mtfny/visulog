@@ -4,6 +4,7 @@ import java.util.Map;
 
 //Each class that defines the configuration of a plugin extends this class
 //This makes it possible for the user to customize a lot of variables used by the plugin
+//The name of the variables and their values are stored in numSettings and stringSettings
 public class PluginConfig implements java.io.Serializable {
 	protected Map<String, Integer> numSettings = new HashMap<String, Integer>();
 	protected Map<String, String> stringSettings = new HashMap<String, String>();
