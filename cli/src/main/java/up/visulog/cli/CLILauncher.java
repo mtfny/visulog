@@ -3,8 +3,7 @@ package up.visulog.cli;
 import up.visulog.analyzer.Analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
-import up.visulog.config.CountCommitsPerAuthorConfig;
-import up.visulog.config.CountCommitsPerDayConfig;
+
 
 import java.nio.file.FileSystems;
 import java.io.File;
@@ -57,17 +56,6 @@ public class CLILauncher {
 
                         case "--addPlugin":
                             addPlugin(pValue, plugins);
-
-                            /* if (pValue.equals("CountCommitsPerAuthor")) {
-                                plugins.put("CountCommitsPerAuthor", new CountCommitsPerAuthorConfig());
-                            }
-                            else if (pValue.equals("CountCommitsPerDay")) {
-                                plugins.put("CountCommitsPerDay", new CountCommitsPerDayConfig());
-                            }
-                            else {
-                                System.out.println("\nERROR : Plugin doesn't exist");
-                            } */
-
                             break;
 
                         case "--loadConfigFile":
