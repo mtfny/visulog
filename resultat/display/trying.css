@@ -1,66 +1,198 @@
 body {
-    background-color: gray;
     font-family: sans-serif; /* 1 */
+    margin: 0px;
 }
 
-.medo {
-    height: 84vh;
-}
-
-.weapons-list {
-    margin: 5%;
-    border: 2px solid black;
-    background-color: rgb(116, 116, 116);
+#container {
     display: flex;
-    width: 86%;
-    height: 70%;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(0, 10, 20);
+}
+
+#title-container {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    color: white;
+    padding: 0px 5%;
+    align-items: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgb(50, 60, 70);
+}
+
+#project-info {
+    display: flex;
+    height: 90%;
+}
+
+#project-desc-container {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgb(50, 60, 70);
+}
+
+#project-image {
+    height: 40%;
+    width: 100%;
+    padding: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+#image{
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgb(50, 60, 70);
+}
+
+#project-desc {
+    padding: 5%;
+    color:rgb(116, 116, 116);
+    height: 60%;
+}
+
+#project-desc-title {
+    margin: 7% 3%;
+}
+
+#project-desc p {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+#project-stat-container {
+    height: 100%;
+    width: 75%;
+    color: white;
+}
+
+#project-stat-container h2 {
+    height: 10vh;
+    padding: 2% 5%;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+#project-stat-desc {
+    height: 15vh;
+    padding: 0% 5%;
+}
+
+#project-stat-desc p {
+    margin: 0px;
+    color:rgb(116, 116, 116);
+}
+
+#project-stat {
+    box-sizing: border-box;
+    height: 65vh;
+    padding: 10vh;
+}
+
+#project-stat-display {
+    padding: 2.5vh;
+    box-sizing: border-box;
+    height: 45vh;
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid rgb(50, 60, 70);
+}
+
+#div-button {
+    height: 3.5vh;
+    position: absolute;
+    right: 10vh;
+    top: 6vh;
+    border: 1px solid;
+    border-radius: 5px;
+}
+
+#div-button button {
+    height: 3.5vh;
+    background: none;
+    color: white;
+}
+
+.stat-container {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    height: 40vh;
+    color: white;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
     color: rgb(50, 50, 50);
 }
 
-.grid {
+#day-list {
+    height: 100%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
 }
 
-.months {
-    display: grid;
-    height: 8vh;
-    grid-auto-flow: column;
-    grid-template-columns: 3fr 4fr;
+#month-space {
+    height: 5vh;
 }
 
-.months p {
-    display: flex;
-    justify-content: center;
-    height: 2vw;
-}
-
-#days, #day {
+#days-list-name {
+    color: lightgray;
+    height: 90%;
     display: grid;
     grid-template-rows: repeat(7, 1fr);
     grid-auto-flow: column;
 }
 
-#day {
-    margin-top: 8vh;
-}
-
-#day p {
+#days-list-name p{
+    margin:0px;
     display: flex;
     align-items: center;
+}
+
+#stats-grid {
+    height: 100%;
+}
+
+.months {
+    color: lightgray;
+    height: 5vh;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 22.5vh 21vh;
+}
+
+.months p {
     margin: 0px;
 }
 
-.case {
-    border-radius: 5px;
-    height: 2vw;
-    width: 2vw;
-    border: 1px solid black;
-    margin: 1px;
+#days-div {
+    display: flex;
+    height: 90%;
 }
+
+#days {
+    height: 90%;
+    display: grid;
+    grid-template-rows: repeat(7, 5vh);
+    grid-auto-flow: column;
+}
+
+.case {
+    height: 4vh;
+    width: 4vh;
+    margin: 0.5vh;
+    border: 1px solid;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
 
 #bubble {
     position: absolute;
