@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# afunction that gives each file extension with their total size
+func1()
+{
+  ftypes=$(find . -type f | grep -v ".*/\..*" | grep -E ".*\.[a-zA-Z0-9]*$" | sed -e 's/.*\(\.[a-zA-Z0-9]*\)$/\1/' | sort | uniq)
+
+  for ft in $ftypes
+  do
+      echo -n "$ft "
+      find . -name "*${ft}" -exec ls -l {} \; | awk '{total += $5} END {print total}'
+  done
+}
+
+
+
 if [ ! -n $1 ]
 then
 
@@ -17,6 +31,21 @@ then
   #a command line that calculates the number of files including the hidden ones
   num=$(find . -type f | wc -l)
   echo "$num"
+
+elif [ "$1" = "-s" ]
+then
+
+  extensions=$(func1)
+  # replace each extension with its programming language
+  while IFS= read -r line; do
+      a=$(echo $line | cut -d" " -f1)
+      b=$(echo $line | cut -d" " -f2)
+      extensions=$(echo "$extensions" | sed "s/$a/$b/g")
+  done < "./extensions"
+
+#delete those with no programming language
+extensions=$(echo "$extensions" | grep -v "^\.")
+echo "$extensions"
 
 
 else
