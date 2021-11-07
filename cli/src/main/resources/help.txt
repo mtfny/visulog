@@ -1,0 +1,14 @@
+	Help command
+
+>>To use gradlew the correct syntax is : [./gradlew run -—args ‘here are my args’]
+>>You can either pass a command in the arguments or the path to a directory
+>>The path to your directory must contains a « .git » directory or else you will get an error message
+
+>>Here the list of commands you can type :
+	[--help]  -> Display the exact list.
+	
+	[—-addPlugin] -> Adds a plugin. Takes a plugin name as parameter.
+		[-—addPlugin=CountCommits]  -> Counts the numbers of commits  made.
+
+	[-—loadConfigFile] -> Save your parameters and quits the program.
+	[—-justSaveConfigFile] -> Loads your parameters from a file.

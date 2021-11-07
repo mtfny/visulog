@@ -5,10 +5,13 @@ import up.visulog.webgen.writeHTML;
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
 
-
+import java.nio.Buffer;
 import java.nio.file.FileSystems;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -33,7 +36,9 @@ public class CLILauncher {
             writer.createhtmlFile();
             System.out.println("Success");
         } 
-        else displayHelpAndExit();
+        else helpexit_txt();
+
+        //displayHelpAndExit();
     }
 
     //So what this code do is take the command line we entered from the terminal, and make a new configuration.
@@ -56,7 +61,8 @@ public class CLILauncher {
                     String pValue = parts[1];
                     switch (pName) {
                         case "--help" :
-                            help_command();
+                            help_txt();
+                           // help_command();
                             break;
 
                         case "--addPlugin":
@@ -120,6 +126,42 @@ public class CLILauncher {
         return false;
     }
 
+    private static void helpexit_txt(){
+        try {
+            InputStream file = CLILauncher.class.getClassLoader().getResource("helpexit.txt").openStream();
+            InputStreamReader reader = new InputStreamReader(file);
+
+            BufferedReader Breader = new BufferedReader(reader);
+            String line;
+
+            while( (line = Breader.readLine()) !=null){
+                System.out.println(line);
+            }
+            Breader.close();
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+
+    private static void help_txt() {
+        try {
+            InputStream file = CLILauncher.class.getClassLoader().getResource("help.txt").openStream();
+            InputStreamReader reader = new InputStreamReader(file);
+
+            BufferedReader Breader = new BufferedReader(reader);
+            String line;
+
+            while( (line = Breader.readLine()) !=null){
+                System.out.println(line);
+            }
+            Breader.close();
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+    }
+/* first planned methods
     private static void displayHelpAndExit() {
         System.out.println("Wrong command...");
         System.out.println("\nThe correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
@@ -153,4 +195,5 @@ public class CLILauncher {
         System.out.println("");
         System.exit(0);
     }
+    */
 }
