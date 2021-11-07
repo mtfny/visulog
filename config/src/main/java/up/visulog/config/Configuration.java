@@ -35,6 +35,7 @@ public class Configuration implements java.io.Serializable {
         return deepCopy(plugins);
     }
     
+    //Saves a configuration file in the folder in configFilePath
     public void saveConfigFile() {
     	try {
     		File configFile = getConfigFile();
@@ -51,6 +52,7 @@ public class Configuration implements java.io.Serializable {
     	
     }
     
+    //Loads a configuration file at the at the location passed as a parameter
     public static Configuration loadConfigFile(String configFilePath) {
     	try {
     		File configFile = new File(configFilePath + configFileName);

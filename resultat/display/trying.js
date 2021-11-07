@@ -26,10 +26,10 @@ function commitActivity() {
             bubble.style.top = element.target.getBoundingClientRect().y - 40 + "px";
             bubble.style.left = element.target.getBoundingClientRect().x -15 + "px";
             bubble.innerHTML = element.target.getAttribute("data-date") + " : " + element.target.getAttribute("data-commit-number") + " commits";
-            bubble.removeAttribute("hidden"); 
+            bubble.removeAttribute("hidden");
         }
         child[i].onmouseleave = () => {
-            bubble.setAttribute("hidden", ""); 
+            bubble.setAttribute("hidden", "");
         }
     }
 }
@@ -44,7 +44,7 @@ function contributorActivity() {
     let canvasParent = document.getElementById("project-stat-display");
     let canvasDiv = document.createElement("canvas");
     canvasParent.appendChild(canvasDiv);
-    
+
     let myChart = new Chart(canvasDiv, {
         type: 'bar',
         data: {
@@ -69,7 +69,7 @@ function contributorActivity() {
                     'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
-            }],   
+            }],
         },
         options: {
             maintainAspectRatio: false,
