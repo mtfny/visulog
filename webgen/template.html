@@ -2,10 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <meta http-equiv="X-UA-Compatible"  data-commit-number="5" content="IE=edge"  data-commit-number="5">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./release/tryingtest.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
+    <title>Test isotope</title>
 </head>
 <body>
-    $replace
+    <div id="bubble" hidden></div>
+    <div id="container">
+        <div id="title-container">
+            <h1>Klee Project</h1>
+        </div>
+        <div id="project-info">
+            <div id="project-desc-container">
+                <div id="project-image">
+                    <img id="image" src="./release/kleeProject.jpg">
+                </div>
+                <div id="project-desc">
+                    <h3 id="project-desc-title" >Description :</h3>
+                    <p>Logiciel d'analyse de logs pour git.<br>Ceci est un début de projet proposé pour amélioration aux étudiants de pré-pro-2/conduite de projet.</p>
+                </div>
+            </div>
+            <div id="project-stat-container">
+                <h2>Last Commit Activity</h2>
+                <div id="project-stat-desc">
+                    <p></p>
+                </div>
+                <div id="project-stat">
+                    <div id="project-stat-display">
+                        $replace
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>
+<script src="trying.js"></script>
