@@ -3,17 +3,18 @@ package up.visulog.cli;
 import up.visulog.analyzer.Analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.config.PluginConfig;
-import up.visulog.config.CountCommitsPerAuthorConfig;
+
 
 import java.nio.file.FileSystems;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Optional;
 
+import java.lang.reflect.*;
 
 public class CLILauncher {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         //Creates a new configuration with the gitpath and the plugins as arguments from main.
         var config = makeConfigFromCommandLineArgs(args);
 
@@ -31,7 +32,7 @@ public class CLILauncher {
     }
 
     //So what this code do is take the command line we entered from the terminal, and make a new configuration.
-    static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
+    static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         //gitPath takes the current path visulog is located at, which is it's own folder.
         String gitPath = FileSystems.getDefault().getPath(".").toString();
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
@@ -54,13 +55,9 @@ public class CLILauncher {
                             break;
 
                         case "--addPlugin":
-                            // TODO: parse argument and make an instance of PluginConfig.
-                            // Let's just trivially do this, before the TODO is fixed:
-
-                            if (pValue.equals("countCommits")) plugins.put("countCommits", new CountCommitsPerAuthorConfig() {
-                            });
-
+                            addPlugin(pValue, plugins);
                             break;
+
                         case "--loadConfigFile":
                             Configuration res = Configuration.loadConfigFile(configFilePath);
                             if(check_directory_exists(res.getGitPath().toString()) == true)
@@ -87,6 +84,22 @@ public class CLILauncher {
         //in an existing directory or not.
         if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins));
         else return Optional.empty();
+    }   
+
+    public static void addPlugin(String pluginName, HashMap<String, PluginConfig> plugins) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        try {
+            @SuppressWarnings("unchecked")
+
+            //We create a new plugin config according to the pluginName we typed.
+            Class<?> c = (Class<PluginConfig>)Class.forName("up.visulog.config." + pluginName + "Config");
+            Constructor<?>[] configContructor = c.getConstructors();
+            
+            plugins.put(pluginName, (PluginConfig)configContructor[0].newInstance());
+        }
+        
+        catch (ClassNotFoundException e) {
+            System.out.println("ERROR: Plugin doesn't exists");
+        }
     }
 
     public static boolean check_directory_exists(String path) {
