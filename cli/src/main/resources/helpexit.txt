@@ -1,0 +1,9 @@
+Wrong command...
+The correct syntax for using Gradle is: [./gradlew run --args='here are my args']
+For example:  [./gradlew run --args='. --addPlugin=countCommits']"
+
+        Here is the list of commands you can type: 
+[--help] : Display the list of every command and plugin with every argument possible.
+[--addPlugin] : Adds a plugin.
+[--loadConfigFile] : Saves your parameters and quits the program.
+[--justSaveConfigFile] : Loads your parameters from a file.
