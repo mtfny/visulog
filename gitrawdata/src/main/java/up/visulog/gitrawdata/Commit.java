@@ -70,6 +70,11 @@ public class Commit {
             var builder = new CommitBuilder(idChunks[1]);
 
             line = input.readLine();
+
+            boolean authorPresent=false;
+            boolean mergePresent=false;
+            boolean datePresent=false;
+
             while (!line.isEmpty()) {
                 var colonPos = line.indexOf(":");
                 var fieldName = line.substring(0, colonPos);
@@ -77,14 +82,24 @@ public class Commit {
                 switch (fieldName) {
                     case "Author":
                         builder.setAuthor(fieldContent);
+                        authorPresent=true;
                         break;
                     case "Merge":
                         builder.setMergedFrom(fieldContent);
+                        mergePresent=true;
                         break;
                     case "Date":
                         builder.setDate(fieldContent);
+                        datePresent=true;
                         break;
                     default: // TODO: warn the user that some field was ignored
+                        if(input.readLine()==null){
+                            if (!authorPresent) System.out.println("!WARNING! Author field missing");
+                            if (!mergePresent) System.out.println("!WARNING! Merge field missing");
+                            if (!datePresent) System.out.println("!WARNING! Date field missing");
+                            if (!authorPresent || !datePresent) parseError();
+                            break;
+                        }
                 }
                 line = input.readLine(); //prepare next iteration
                 if (line == null) parseError(); // end of stream is not supposed to happen now (commit data incomplete)
