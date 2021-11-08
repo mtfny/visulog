@@ -1,5 +1,6 @@
 package up.visulog.webgen;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -9,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.net.URI;
+
 
 import up.visulog.analyzer.*;
 import java.io.InputStream;
@@ -39,10 +42,11 @@ public class writeHTML {
         //Create a new BufferedWriter who allow to write in a file
         //Create also a new File HTML
         BufferedWriter writer = new BufferedWriter(new FileWriter(getResultFolder()  + "/newFile.html"));
-        
+        openHtlmFile();
         //Write our string in the new File
         writer.write(htmlString);
         writer.close();
+
     }
     
     //returns the path to the result folder where the file will be written
@@ -65,7 +69,29 @@ public class writeHTML {
           new InputStreamReader(input, StandardCharsets.UTF_8))
             .lines()
             .collect(Collectors.joining("\n"));
-        
+
         return text;
     }
+
+    //Open an htlm file in the default browser
+    public void openHtlmFile() {
+        String s=getResultFolder()+"\\newFile.html";
+        URI u = new File(s).toURI();
+
+        try {
+
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
+                Desktop.getDesktop().browse(u);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            // Notify the user of the failure
+            System.out.println("Failed to open the webpage on your default browser.");
+            System.out.println("Webpage: " + u);
+        }
+    }
+
+
 }
