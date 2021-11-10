@@ -3,6 +3,7 @@ package up.visulog.analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import java.util.Calendar;
+import java.time.LocalDate;
 
 import java.util.TreeMap;
 import java.util.List;
@@ -25,14 +26,32 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     	
     	Calendar cal = Calendar.getInstance();
     	
+    	//Two DateObj variables are created in order to retrieve the dates of both the earliest and latest commits contained in the gitLog list.
+    	DateObj dateFirst = null;
+    	DateObj dateLast = null;
+    	
         for (var commit : gitLog) {
         	if(commit.date != null) {
         		cal.setTime(commit.date);
         		DateObj date = new DateObj(cal.get(cal.DAY_OF_MONTH), cal.get(cal.DAY_OF_WEEK), cal.get(cal.MONTH), cal.get(cal.YEAR));
         		Integer nb = result.commitsPerDate.getOrDefault(date, 0);
         		result.commitsPerDate.put(date, nb + 1);
+        		
+        		if(dateFirst == null || date.compareTo(dateFirst) == -1) dateFirst = date;
+        		if(dateLast == null || date.compareTo(dateLast) == 1) dateLast = date;
         	}
-        }    	
+        }
+        
+        LocalDate first = LocalDate.of(dateFirst.year, dateFirst.month, dateFirst.day);
+        LocalDate last = LocalDate.of(dateLast.year, dateLast.month, dateLast.day);
+        
+        //We iterate between the dates of the earliest and latest commits of the gitLog list. If a date in that interval of time is not a key in the result.commitsPerDate TreeMap (if no commits were published that day), then it is added as a key to the TreeMap with an associated value of 0 (so as to indicate that no commits were published that day).
+        for (LocalDate date = first; date.isBefore(last); date = date.plusDays(1)) {
+        	DateObj dateIter = new DateObj(date.getDayOfMonth(), date.getDayOfWeek().ordinal(), date.getMonthValue(), date.getYear());
+        	if(! result.commitsPerDate.containsKey(dateIter)) {
+        		result.commitsPerDate.put(dateIter, 0);
+        	}
+        }
         return result;
     }
 
@@ -161,5 +180,6 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
             result = 31 * result + year;
             return result;
     	}
+    	
     }
 }

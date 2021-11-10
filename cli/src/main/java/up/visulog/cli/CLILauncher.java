@@ -109,7 +109,7 @@ public class CLILauncher {
         }
         
         catch (ClassNotFoundException e) {
-            System.out.println("ERROR: Plugin doesn't exists");
+            System.out.println("ERROR: Plugin doesn't exist");
         }
     }
 
