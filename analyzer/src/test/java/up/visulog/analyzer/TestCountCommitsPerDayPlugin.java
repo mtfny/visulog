@@ -24,15 +24,17 @@ public class TestCountCommitsPerDayPlugin {
         List<Commit> log = new ArrayList<Commit>();
         Date[] dates = new Date[10];
         Calendar c = Calendar.getInstance();
-        c.set(2017, 1, 20);
+        
+        //For Calendar objects, Month value is 0-based. e.g., 0 for January.
+        c.set(2017, 0, 20);
         Date d1 = c.getTime();
-        c.set(2017, 2, 25);
+        c.set(2017, 0, 10);
         Date d2 = c.getTime();
-        c.set(2017, 1, 20);
+        c.set(2017, 0, 20);
         Date d3 = c.getTime();
-        c.set(2017, 1, 1);
+        c.set(2017, 0, 5);
         Date d4 = c.getTime();
-        c.set(2016,5,14);
+        c.set(2017, 0, 15);
         Date d5 = c.getTime();
         dates[0] = d1;
         dates[1] = d2;
@@ -46,15 +48,15 @@ public class TestCountCommitsPerDayPlugin {
         CountCommitsPerDayPlugin.Result res = CountCommitsPerDayPlugin.processLog(log);
         System.out.println(res.getResultAsHtmlDiv());
         System.out.println(res.getResultAsString());
-        //assertEquals(res.getResultAsHtmlDiv(), "<div class=\"grid\"><p id=\"max-commit\" hidden></p><div class=\"months\"><p>Mai 2016</p><p>Jan 2017</p><p>Fév 2017</p></div><div id=\"days\"><div class=\"case\" data-commit-number=\"1\" data-date=\"14 Mai\"></div><div class=\"case\" data-commit-number=\"1\" data-date=\"1 Janvier\"></div><div class=\"case\" data-commit-number=\"2\" data-date=\"20 Janvier\"></div><div class=\"case\" data-commit-number=\"1\" data-date=\"25 Février\"></div></div></div>");
+        assertEquals(res.getResultAsHtmlDiv(), "<div id=\"module\" hidden>commitActivity</div><div class=\"stat-container\"><div id =\"day-list\"><div id=\"month-space\"></div><div id=\"days-list-name\"><p>Lun</p><p>Mar</p><p>Mer</p><p>Jeu</p><p>Ven</p><p>Sam</p><p>Dim</p></div><div id =\"stats-grid\"><p id=\"max-commit\" hidden>10</p><div class=\"months\"><p>Jan 2017</p></div><div id=\"days\"><div class=\"case\" data-commit-number=\"0\" data-date=\"2 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"3 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"4 Janvier\"></div><div class=\"case\" data-commit-number=\"1\" data-date=\"5 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"6 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"7 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"8 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"9 Janvier\"></div><div class=\"case\" data-commit-number=\"1\" data-date=\"10 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"11 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"12 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"13 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"14 Janvier\"></div><div class=\"case\" data-commit-number=\"1\" data-date=\"15 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"16 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"17 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"18 Janvier\"></div><div class=\"case\" data-commit-number=\"0\" data-date=\"19 Janvier\"></div><div class=\"case\" data-commit-number=\"2\" data-date=\"20 Janvier\"></div></div></div></div>");
     }
     
     //Test que l'objet result est "vide" lorsque la liste de commits fournie est null
     public static void checkCommitNull() {
     	
         CountCommitsPerDayPlugin.Result res = CountCommitsPerDayPlugin.processLog(null);
-        //assertEquals(res.getResultAsHtmlDiv(), "<div class=\"grid\"><p id=\"max-commit\" hidden></p><div class=\"months\"></div><div id=\"days\"></div></div>");
-        //assertEquals(res.getResultAsString(), "{}");
+        assertEquals(res.getResultAsHtmlDiv(), "<div id=\"module\" hidden>commitActivity</div><div class=\"stat-container\"><div id =\"day-list\"><div id=\"month-space\"></div><div id=\"days-list-name\"><p>Lun</p><p>Mar</p><p>Mer</p><p>Jeu</p><p>Ven</p><p>Sam</p><p>Dim</p></div><div id =\"stats-grid\"><p id=\"max-commit\" hidden>10</p><div class=\"months\"></div><div id=\"days\"></div></div></div>");
+        assertEquals(res.getResultAsString(), "{}");
     }
     
     //Test que l'objet result est "vide" lorsque la liste de commits fournie est vide
@@ -62,7 +64,7 @@ public class TestCountCommitsPerDayPlugin {
     	List<Commit> log = new ArrayList<Commit>();
         
         CountCommitsPerDayPlugin.Result res = CountCommitsPerDayPlugin.processLog(log);
-        //assertEquals(res.getResultAsHtmlDiv(), "<div class=\"grid\"><p id=\"max-commit\" hidden></p><div class=\"months\"></div><div id=\"days\"></div></div>");
-        //assertEquals(res.getResultAsString(), "{}");
+        assertEquals(res.getResultAsHtmlDiv(), "<div id=\"module\" hidden>commitActivity</div><div class=\"stat-container\"><div id =\"day-list\"><div id=\"month-space\"></div><div id=\"days-list-name\"><p>Lun</p><p>Mar</p><p>Mer</p><p>Jeu</p><p>Ven</p><p>Sam</p><p>Dim</p></div><div id =\"stats-grid\"><p id=\"max-commit\" hidden>10</p><div class=\"months\"></div><div id=\"days\"></div></div></div>");
+        assertEquals(res.getResultAsString(), "{}");
     }
 }
