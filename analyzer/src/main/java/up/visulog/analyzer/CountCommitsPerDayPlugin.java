@@ -33,7 +33,15 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         for (var commit : gitLog) {
         	if(commit.date != null) {
         		cal.setTime(commit.date);
-        		DateObj date = new DateObj(cal.get(cal.DAY_OF_MONTH), cal.get(cal.DAY_OF_WEEK)-1, cal.get(cal.MONTH)+1, cal.get(cal.YEAR));
+        		DateObj date = null;
+        		//Since the value DAY_OF_WEEK attribute of Calendar objects start with Sundays, an if/else statement for the case in which the day of the week is a Sunday is needed
+        		int dayOfWeek = cal.get(cal.DAY_OF_WEEK);
+        		if(dayOfWeek == 1) {
+        			dayOfWeek = 7;
+        		}else {
+        			dayOfWeek--;
+        		}
+        		date = new DateObj(cal.get(cal.DAY_OF_MONTH), dayOfWeek, cal.get(cal.MONTH)+1, cal.get(cal.YEAR));
         		Integer nb = result.commitsPerDate.getOrDefault(date, 0);
         		result.commitsPerDate.put(date, nb + 1);
         		
@@ -42,7 +50,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         	}
         }
         
-        //If the earliest Commit in the gitLog list did not happen on a Monday, the variable dateFirst takes the value of the preceding Monday, for the sake of presenting the resulting html file in a way that starts with a Monday.
+        //If the earliest Commit in the gitLog list did not happen on a Monday, the variable dateFirst takes the value of the preceding Monday, for the sake of presenting the resulting html file with complete weeks that all start with Mondays.
         int dayOfWeek = dateFirst.weekDay;
         LocalDate first = LocalDate.of(dateFirst.year, dateFirst.month+1, dateFirst.day);
         first = first.minusDays(dayOfWeek);
