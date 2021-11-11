@@ -21,7 +21,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     //Returns a result object that contains the number of commits per day
     static Result processLog(List<Commit> gitLog) {   	
     	Result result = new Result();
-    	if(gitLog == null)
+    	if(gitLog == null || gitLog.isEmpty())
     		return result;
     	
     	Calendar cal = Calendar.getInstance();
@@ -33,7 +33,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         for (var commit : gitLog) {
         	if(commit.date != null) {
         		cal.setTime(commit.date);
-        		DateObj date = new DateObj(cal.get(cal.DAY_OF_MONTH), cal.get(cal.DAY_OF_WEEK), cal.get(cal.MONTH), cal.get(cal.YEAR));
+        		DateObj date = new DateObj(cal.get(cal.DAY_OF_MONTH), cal.get(cal.DAY_OF_WEEK)-1, cal.get(cal.MONTH)+1, cal.get(cal.YEAR));
         		Integer nb = result.commitsPerDate.getOrDefault(date, 0);
         		result.commitsPerDate.put(date, nb + 1);
         		
@@ -42,12 +42,15 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         	}
         }
         
-        LocalDate first = LocalDate.of(dateFirst.year, dateFirst.month, dateFirst.day);
-        LocalDate last = LocalDate.of(dateLast.year, dateLast.month, dateLast.day);
+        //If the earliest Commit in the gitLog list did not happen on a Monday, the variable dateFirst takes the value of the preceding Monday, for the sake of presenting the resulting html file in a way that starts with a Monday.
+        int dayOfWeek = dateFirst.weekDay;
+        LocalDate first = LocalDate.of(dateFirst.year, dateFirst.month+1, dateFirst.day);
+        first = first.minusDays(dayOfWeek);
+        LocalDate last = LocalDate.of(dateLast.year, dateLast.month+1, dateLast.day+1);
         
         //We iterate between the dates of the earliest and latest commits of the gitLog list. If a date in that interval of time is not a key in the result.commitsPerDate TreeMap (if no commits were published that day), then it is added as a key to the TreeMap with an associated value of 0 (so as to indicate that no commits were published that day).
         for (LocalDate date = first; date.isBefore(last); date = date.plusDays(1)) {
-        	DateObj dateIter = new DateObj(date.getDayOfMonth(), date.getDayOfWeek().ordinal(), date.getMonthValue(), date.getYear());
+        	DateObj dateIter = new DateObj(date.getDayOfMonth(), date.getDayOfWeek().ordinal()+1, date.getMonthValue(), date.getYear());
         	if(! result.commitsPerDate.containsKey(dateIter)) {
         		result.commitsPerDate.put(dateIter, 0);
         	}
@@ -180,6 +183,5 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
             result = 31 * result + year;
             return result;
     	}
-    	
     }
 }
