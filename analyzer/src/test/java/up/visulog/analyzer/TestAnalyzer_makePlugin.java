@@ -10,8 +10,8 @@ public class TestAnalyzer_makePlugin {
 		
 		HashMap<String, PluginConfig> m = new HashMap<>();
 		
-		PluginConfig countAuthorConfig = new CountCommitsPerAuthorConfig();
-		PluginConfig countDayConfig = new CountCommitsPerDayConfig();
+		PluginConfig countAuthorConfig = new PluginConfig();
+		PluginConfig countDayConfig = new PluginConfig();
 		
 		//Test with Strings that indicate the names of existing AnalyzerPlugin classes
 		m.put("CountCommitsPerAuthor", countAuthorConfig);

@@ -10,8 +10,8 @@ public class TestAnalyzer_computeResults {
 		HashMap<String, PluginConfig> pMap = new HashMap<>();
 		
 		//TestPluginConfig and Test2PluginConfig classes are instantiated
-		PluginConfig pConfig = new TestPluginConfig();
-		PluginConfig pConfig2 = new Test2PluginConfig();
+		PluginConfig pConfig = new PluginConfig();
+		PluginConfig pConfig2 = new PluginConfig();
 		
 		//The instances of TestPluginConfig and Test2PluginConfig are put in the pMap HashMap with the String that corresponds to their respective AnalyzerPlugin counterpart as the key
 		pMap.put("Test", pConfig);

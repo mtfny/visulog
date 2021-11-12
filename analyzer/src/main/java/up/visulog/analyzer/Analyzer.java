@@ -23,7 +23,7 @@ public class Analyzer {
         for (var pluginConfigEntry: config.getPluginConfigs().entrySet()) {
             var pluginName = pluginConfigEntry.getKey();
             var pluginConfig = pluginConfigEntry.getValue();
-            var plugin = makePlugin(pluginName, pluginConfig);
+            var plugin = makePlugin(pluginName);
             plugin.ifPresent(plugins::add);
         }
         
@@ -37,7 +37,7 @@ public class Analyzer {
     }
 
     //In order for the list of plugins not to be hardcored in this factory with a switch statement, this method will use the String "pluginName" (which is passed as a parameter) in order to find the class name of the object we want to instantiate.
-    private Optional<AnalyzerPlugin> makePlugin(String pluginName, PluginConfig pluginConfig) {
+    private Optional<AnalyzerPlugin> makePlugin(String pluginName) {
     	
     	if(this.config.getPluginConfigs().containsKey(pluginName)) {
     		// If the "plugins" Map attribute of the config attribute of the Analyzer class contains a key that is equivalent to the parameter pluginName, a new object of the Class.forName(pluginName) class with the object "this.config" passed as parameter to the class constructor is returned.
@@ -53,6 +53,7 @@ public class Analyzer {
     		}
     		catch(Exception e) {
     			//If the method runs into an exception at any point in the try statement, an empty Optional instance is returned instead.
+    			System.out.println("Plugin " + pluginName + " does not exist");
     			return Optional.empty();
     		}
     	}
