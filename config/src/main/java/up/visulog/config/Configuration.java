@@ -19,11 +19,13 @@ public class Configuration implements java.io.Serializable {
     private final String configFilePath; //Directory where the configuration file will be stored
     private final Map<String, PluginConfig> plugins;
     private static final String configFileName = "config.txt";
+	private boolean openHtml;
 
-    public Configuration(String gitPath, String cfPath, Map<String, PluginConfig> plugins) {
+    public Configuration(String gitPath, String cfPath, Map<String, PluginConfig> plugins, boolean openHtml) {
         this.gitPath = gitPath;
         this.configFilePath = cfPath;
         this.plugins = deepCopy(plugins);
+		this.openHtml = openHtml;
     }
 
     
@@ -34,6 +36,10 @@ public class Configuration implements java.io.Serializable {
     public Map<String, PluginConfig> getPluginConfigs() {
         return deepCopy(plugins);
     }
+
+	public boolean getOpenHtml() {
+		return this.openHtml;
+	}
     
     //Saves a configuration file in the folder in configFilePath
     public void saveConfigFile() {
