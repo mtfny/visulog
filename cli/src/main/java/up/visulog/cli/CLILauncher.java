@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ import java.net.URISyntaxException;
 
 public class CLILauncher {
 
-    public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         //Creates a new configuration with the gitpath and the plugins as arguments from main.
         var config = makeConfigFromCommandLineArgs(args);
 
@@ -48,13 +49,14 @@ public class CLILauncher {
     }
 
     //So what this code do is take the command line we entered from the terminal, and make a new configuration.
-    static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
         //gitPath takes the current path visulog is located at, which is it's own folder.
         String gitPath = FileSystems.getDefault().getPath(".").toString();
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
         boolean openHtml = false;
 
         var plugins = new HashMap<String, PluginConfig>();
+        Map<String,String> pluginParameters = new HashMap<String,String>();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
         for (var arg : args) {
@@ -96,6 +98,14 @@ public class CLILauncher {
                     }
                 }
             }
+            
+            else if(arg.startsWith("-")) {
+            	String[] parts = arg.split("=");
+                if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
+                	pluginParameters.put(parts[0], parts[1]);
+                }
+            }
+            
             else {
                 //If we aren't passing a command that exists. We are changing the value of gitpath to the 
                 //argument we passed to check if we are passing a directory in our command line.
@@ -104,24 +114,14 @@ public class CLILauncher {
         }
         //At the end we verify that everything is working by checking if the path in gitPath is
         //in an existing directory or not.
-        if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins, openHtml));
+        if (check_directory_exists(gitPath)) 
+        	return Optional.of(new Configuration(gitPath, configFilePath, plugins, openHtml));
+
         else return Optional.empty();
     }   
 
-    public static void addPlugin(String pluginName, HashMap<String, PluginConfig> plugins) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        try {
-            @SuppressWarnings("unchecked")
-
-            //We create a new plugin config according to the pluginName we typed.
-            Class<?> c = (Class<PluginConfig>)Class.forName("up.visulog.config." + pluginName + "Config");
-            Constructor<?>[] configContructor = c.getConstructors();
-            
-            plugins.put(pluginName, (PluginConfig)configContructor[0].newInstance());
-        }
-        
-        catch (ClassNotFoundException e) {
-            System.out.println("ERROR: Plugin doesn't exist");
-        }
+    public static void addPlugin(String pluginName, HashMap<String, PluginConfig> plugins) {
+        plugins.put(pluginName, new PluginConfig());
     }
 
     public static boolean check_directory_exists(String path) {
@@ -150,7 +150,6 @@ public class CLILauncher {
             }
             Breader.close();
         } catch (Exception e) {
-            //TODO: handle exception
             e.printStackTrace();
         }
     }
@@ -168,43 +167,7 @@ public class CLILauncher {
             }
             Breader.close();
         } catch (Exception e) {
-            //TODO: handle exception
             e.printStackTrace();
         }
     }
-/* first planned methods
-    private static void displayHelpAndExit() {
-        System.out.println("Wrong command...");
-        System.out.println("\nThe correct syntax for using Gradle is: [./gradlew run --args='here are my args']");
-        System.out.println("For example:  [./gradlew run --args='. --addPlugin=countCommits']");
-
-        System.out.println("\nHere is the list of commands you can type: ");
-        System.out.println("[--help] : Display the list of every command and plugin with every argument possible.");
-        System.out.println("[--addPlugin] : Adds a plugin.");
-        System.out.println("[--loadConfigFile] : Saves your parameters and quits the program.");
-        System.out.println("[--justSaveConfigFile] : Loads your parameters from a file.");
-
-        System.exit(0);
-    }   
-
-    private static void help_command() {
-        System.out.println("\nTo use gradlew the correct syntax is : [./gradlew run --args='here are my args']");
-        System.out.println("You can either pass a command in the arguments or the path to a directory.");
-        System.out.println("The path to your directory must contain a .git directory or else you will get an error message.");
-
-        System.out.println("\n\n Here is a list of commands you can type: ");
-
-        System.out.println("\n[--help] : Display this exact list.");
-
-        System.out.println("\n[--addPlugin] : Adds a plugin. Takes a plugin name as a parameter.");
-        System.out.println("    - [--addPlugin=countCommits] Counts the number of commits made.");
-
-        System.out.println("\n[--loadConfigFile] : Saves your parameters and quits the program.");
-
-        System.out.println("\n[--justSaveConfigFile] : Loads your parameters from a file.");
-
-        System.out.println("");
-        System.exit(0);
-    }
-    */
 }

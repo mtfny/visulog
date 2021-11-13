@@ -41,6 +41,10 @@ public class Configuration implements java.io.Serializable {
 		return this.openHtml;
 	}
     
+    public void setPluginConfig(PluginConfig config) {
+    	
+    }
+    
     //Saves a configuration file in the folder in configFilePath
     public void saveConfigFile() {
     	try {
@@ -92,7 +96,7 @@ public class Configuration implements java.io.Serializable {
     }
     
     //Returns a deep copy of the plugins map
-    private Map<String, PluginConfig> deepCopy(Map<String, PluginConfig> m){
+    private Map<String, PluginConfig> deepCopy(Map<String, PluginConfig> m) {
     	Map<String, PluginConfig> res = new HashMap<String, PluginConfig>();
     	
     	for(Map.Entry<String, PluginConfig> entry : m.entrySet()) {

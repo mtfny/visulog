@@ -75,7 +75,7 @@ public class writeHTML {
 
     //Open an htlm file in the default browser
     public void openHtlmFile() {
-        String s=getResultFolder()+"\\newFile.html";
+        String s=getResultFolder()+"/newFile.html";
         URI u = new File(s).toURI();
 
         try {

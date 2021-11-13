@@ -5,23 +5,20 @@ import java.util.Map;
 //Each class that defines the configuration of a plugin extends this class
 //This makes it possible for the user to customize a lot of variables used by the plugin
 //The name of the variables and their values are stored in numSettings and stringSettings
-public class PluginConfig implements java.io.Serializable {
-	protected Map<String, Integer> numSettings = new HashMap<String, Integer>();
-	protected Map<String, String> stringSettings = new HashMap<String, String>();
+public class PluginConfig implements java.io.Serializable, Cloneable {
+	protected Map<String, String> settings = new HashMap<String, String>();
 	
-	public Map<String, Integer> getNumSettings() { return new HashMap<String, Integer>(numSettings); }
-	public Map<String, String> getStringSettings() { return new HashMap<String, String>(stringSettings); }
+	public Map<String, String> getSettings() { return new HashMap<String, String>(settings); }
+	protected void setSettings(Map<String, String> s) { this.settings = new HashMap<String, String>(s); }
 	
-	protected PluginConfig clone() { return null;}
-	protected void configure() {} //Fonction dans laquelle le pluginConfig peut demander les valeurs dont il a besoin via ligne de commande
-	
-	//Both of these functions are only for testing
-	public void addSetting(String s, Integer i) {
-		numSettings.put(s, i);
-		
+	@Override
+	public PluginConfig clone() { 
+		PluginConfig clone = new PluginConfig();
+		clone.settings = new HashMap<String, String>(this.settings);
+		return clone;
 	}
 	
 	public void addSetting(String s1, String s2) {
-		stringSettings.put(s1, s2);
+		settings.put(s1, s2);
 	}
 }
