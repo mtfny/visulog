@@ -97,7 +97,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         @Override
         //Method that returns a String which can then be used to display the commitsPerAuthor list as an html page
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div id=\"module\" hidden>commitActivity</div><div class=\"stat-container\"><div id =\"day-list\"><div id=\"month-space\"></div><div id=\"days-list-name\"><p>Lun</p><p>Mar</p><p>Mer</p><p>Jeu</p><p>Ven</p><p>Sam</p><p>Dim</p></div><div id =\"stats-grid\"><p id=\"max-commit\" hidden>" + maxCommit + "</p><div class=\"months\">");
+            StringBuilder html = new StringBuilder("<div class=\"module\" hidden>commitActivity</div><div id=\"grid-container\"><div id=\"day-list\"><div id=\"month-space\"></div><div id=\"days-list-name\"><p>Lun</p><p>Mar</p><p>Mer</p><p>Jeu</p><p>Ven</p><p>Sam</p><p>Dim</p></div></div><div id =\"stats-grid\"><p id=\"max-commit\" hidden>" + maxCommit + "</p><div class=\"months\">");
             String lastShortDate ="";
             for (var item : commitsPerDate.entrySet()) {
             	String shortDate = item.getKey().monthAndYear();
@@ -107,7 +107,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
                     lastShortDate = shortDate;
             	}
             }
-            html.append("</div><div id=\"days\">");
+            html.append("</div><div class=\"days\">");
             
             for(var item : commitsPerDate.entrySet()) {
             	html.append("<div class=\"case\" data-commit-number=\"").append(item.getValue()).append("\" data-date=\"").append(item.getKey().getDay() + " " + item.getKey().getMonth()).append("\"></div>");

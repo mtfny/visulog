@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./display/trying.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js"></script>
-    <title>Test isotope</title>
+    <title>Stat - Klee Project</title>
 </head>
 <body>
     <div id="bubble" hidden></div>
@@ -14,30 +14,31 @@
         <div id="title-container">
             <h1>Klee Project</h1>
         </div>
-        <div id="project-info">
-            <div id="project-desc-container">
+        <div class="project-info">
+            <div class="project-desc-container">
                 <div id="project-image">
-                    <img id="image" src="./release/kleeProject.jpg">
+                    <img id="image" src="../release/kleeProject.jpg">
                 </div>
                 <div id="project-desc">
                     <h3 id="project-desc-title" >Description :</h3>
                     <p>Logiciel d'analyse de logs pour git.<br>Ceci est un début de projet proposé pour amélioration aux étudiants de pré-pro-2/conduite de projet.</p>
                 </div>
             </div>
-            <div id="project-stat-container">
-                <h2>Last Commit Activity</h2>
-                <div id="project-stat-desc">
+            <div class="project-stat-container">
+                <h2>Commit Activity</h2>
+                <div class="project-stat-desc">
                     <p></p>
                 </div>
-                <div id="project-stat">
-                    <div id="project-stat-display">
+                <div class="project-stat">
+                    <div class="project-stat-display" style="position: relative">
                         $replace
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
-
+    
 </body>
 </html>
 <script src="display/trying.js"></script>
