@@ -20,7 +20,7 @@ public class TestAnalyzer_makePlugin {
 		//Test with a String that doesn't indicate the name of an existing AnalyzerPlugin class
 		m.put("CountCommits", countAuthorConfig);
 		
-		Configuration c = new Configuration("", "", m);
+		Configuration c = new Configuration("", "", m, false);
 		Analyzer a = new Analyzer(c);
 		
 		a.computeResults();

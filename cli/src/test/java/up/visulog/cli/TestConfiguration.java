@@ -25,7 +25,7 @@ public class TestConfiguration {
         	System.out.println(entry.getValue() == null);
         }
         
-		Configuration c = new Configuration(gitPath, configFilePath, plugins);
+		Configuration c = new Configuration(gitPath, configFilePath, plugins, false);
 		c.saveConfigFile();
 		Configuration test = Configuration.loadConfigFile(configFilePath);
 		Map<String, PluginConfig> plugins2 = test.getPluginConfigs();
@@ -44,7 +44,7 @@ public class TestConfiguration {
 		
         HashMap<String, PluginConfig> pluginsTest = new HashMap<String, PluginConfig>();
         pluginsTest.put("CountCommitsPerDay", new CountCommitsPerDayConfig());
-		Analyzer ana = new Analyzer(new Configuration(gitPath, configFilePath, pluginsTest));
+		Analyzer ana = new Analyzer(new Configuration(gitPath, configFilePath, pluginsTest, false));
 		var results = ana.computeResults();
 		System.out.println(results.toHTML());
 	}

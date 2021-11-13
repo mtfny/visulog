@@ -17,7 +17,7 @@ public class TestAnalyzer_computeResults {
 		pMap.put("Test", pConfig);
 		pMap.put("Test2", pConfig2);
 		
-		Configuration c = new Configuration("", "", pMap);
+		Configuration c = new Configuration("", "", pMap, false);
 		Analyzer a = new Analyzer(c);
 		
 		a.computeResults();
