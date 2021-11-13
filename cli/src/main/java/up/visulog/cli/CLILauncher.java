@@ -32,10 +32,16 @@ public class CLILauncher {
             //The analyzer then runs all the plugins.
             var results = analyzer.computeResults();
 
-            writeHTML writer = new writeHTML(results);
-            writer.createhtmlFile();
-            System.out.println("Success");
-        } 
+            boolean openhtml = config.get().getOpenHtml();
+
+            //If we have results that can be opened with an html page and we wrote the command '--o' wich
+            //makes openhtml true then we can open the html page.   
+            if (results.getSubResults().isEmpty() == false && openhtml == true) {
+                writeHTML writer = new writeHTML(results);
+                writer.createhtmlFile();
+                System.out.println("Success");
+            }
+        }
         else helpexit_txt();
 
         //displayHelpAndExit();
@@ -46,6 +52,7 @@ public class CLILauncher {
         //gitPath takes the current path visulog is located at, which is it's own folder.
         String gitPath = FileSystems.getDefault().getPath(".").toString();
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
+        boolean openHtml = false;
 
         var plugins = new HashMap<String, PluginConfig>();
 
@@ -60,6 +67,10 @@ public class CLILauncher {
                     String pName = parts[0];
                     String pValue = parts[1];
                     switch (pName) {
+                        case "--o" :
+                            openHtml = true;
+                            break;
+
                         case "--help" :
                             help_txt();
                            // help_command();
@@ -76,7 +87,7 @@ public class CLILauncher {
                             return Optional.empty();
                             
                         case "--justSaveConfigFile":
-                            Configuration toSave = new Configuration(gitPath, configFilePath, plugins);
+                            Configuration toSave = new Configuration(gitPath, configFilePath, plugins, openHtml);
                             toSave.saveConfigFile();
                             return Optional.empty();
                             
@@ -93,7 +104,7 @@ public class CLILauncher {
         }
         //At the end we verify that everything is working by checking if the path in gitPath is
         //in an existing directory or not.
-        if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins));
+        if (check_directory_exists(gitPath)) return Optional.of(new Configuration(gitPath, configFilePath, plugins, openHtml));
         else return Optional.empty();
     }   
 
