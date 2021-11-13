@@ -57,7 +57,7 @@ public class CountCommitsPerAuthorPlugin implements AnalyzerPlugin {
         @Override
         //Method that returns a String which can then be used to display the commitsPerAuthor list as an html page
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div id=\"module\" hidden>contributorActivity</div><div id=\"data-contributor-activity\" hidden>");
+            StringBuilder html = new StringBuilder("<div class=\"module\" hidden>contributorActivity</div><div id=\"data-contributor-activity\" hidden>");
             for (var item : commitsPerAuthor.entrySet()) {
                 html.append("<div data-contributor-name=\"").append(item.getKey()).append("\">").append(item.getValue()).append("</div>");
             }
