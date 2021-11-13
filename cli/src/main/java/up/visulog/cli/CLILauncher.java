@@ -32,9 +32,12 @@ public class CLILauncher {
             //The analyzer then runs all the plugins.
             var results = analyzer.computeResults();
 
-            writeHTML writer = new writeHTML(results);
-            writer.createhtmlFile();
-            System.out.println("Success");
+            //Si on a des resultats alors on ouvre une page html, sinon on n'ouvre pas.
+            if (results.getSubResults().isEmpty() == false) {
+                writeHTML writer = new writeHTML(results);
+                writer.createhtmlFile();
+                System.out.println("Success");
+            }
         } 
         else helpexit_txt();
 
