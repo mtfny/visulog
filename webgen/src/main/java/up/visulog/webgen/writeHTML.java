@@ -42,7 +42,6 @@ public class writeHTML {
         //Create a new BufferedWriter who allow to write in a file
         //Create also a new File HTML
         BufferedWriter writer = new BufferedWriter(new FileWriter(getResultFolder()  + "/newFile.html"));
-        openHtlmFile();
         //Write our string in the new File
         writer.write(htmlString);
         writer.close();

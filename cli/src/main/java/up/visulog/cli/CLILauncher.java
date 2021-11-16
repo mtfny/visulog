@@ -35,12 +35,15 @@ public class CLILauncher {
 
             boolean openhtml = config.get().getOpenHtml();
 
+            
             //If we have results that can be opened with an html page and we wrote the command '--o' wich
             //makes openhtml true then we can open the html page.   
-            if (results.getSubResults().isEmpty() == false && openhtml == true) {
-                writeHTML writer = new writeHTML(results);
+            if (results.getSubResults().isEmpty() == false) {
+            	writeHTML writer = new writeHTML(results);
                 writer.createhtmlFile();
-                System.out.println("Success");
+                
+                if(openhtml)
+                	writer.openHtlmFile();
             }
         }
         else helpexit_txt();
