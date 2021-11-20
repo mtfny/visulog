@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CountPLPecrcenrage implements AnalyzerPlugin{
+public class CountPLPercentagePlugin implements AnalyzerPlugin{
     private final Configuration configuration;
     private Result result;
 
-    public CountPLPecrcenrage(Configuration configuration) {
+    public CountPLPercentagePlugin(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -60,11 +60,11 @@ public class CountPLPecrcenrage implements AnalyzerPlugin{
         @Override
         //Method that returns a String which can then be used to display the PLpercentage list as an html page
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div>programming languages percentage: <ul>");
+            StringBuilder html = new StringBuilder("<div class=\"module\" hidden>languages</div><div id=\"data-langages-parts\" hidden>");
             for (var item : PLpercentage.entrySet()) {
-                html.append("<li>").append(item.getKey()).append(": ").append(item.getValue()).append("</li>");
+                html.append("<div data-langages-parts=\"").append(item.getKey()).append("\">").append(item.getValue()).append("</div>");
             }
-            html.append("</ul></div>");
+            html.append("</div>");
             return html.toString();
         }
     }

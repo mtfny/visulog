@@ -19,12 +19,12 @@ public class NumberOfFiles {
 
     public static BufferedReader executeLsCommand(String command) {
         Path gitPath = FileSystems.getDefault().getPath(".");
-        ProcessBuilder builder = new ProcessBuilder("./fileScanner",command).directory(gitPath.toFile());
+        ProcessBuilder builder = new ProcessBuilder("../fileScanner",command).directory(gitPath.toFile());
         Process process;
         try {
             process = builder.start();
         } catch (IOException e) {
-            throw new RuntimeException("Error running ./fileScanner "+command+" .", e);
+            throw new RuntimeException("Error running ../fileScanner "+command+" .", e);
         }
         InputStream is = process.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));

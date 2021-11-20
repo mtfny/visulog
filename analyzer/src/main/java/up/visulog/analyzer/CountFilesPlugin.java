@@ -58,7 +58,7 @@ public class CountFilesPlugin implements AnalyzerPlugin {
         @Override
         //Method that returns a String which can then be used to display the commitsPerAuthor list as an html page
         public String getResultAsHtmlDiv() {
-            return "<div>Number Of Files : "+NumberOfFiles+" </div>";
+            return "<div class=\"module\" hidden>fileCounter</div><div id=\"data-file-number\" hidden><div data-file-number=" + NumberOfFiles + "></div></div>";
         }
     }
 
