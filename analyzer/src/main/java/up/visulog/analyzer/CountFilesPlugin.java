@@ -4,10 +4,7 @@ import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import up.visulog.gitrawdata.NumberOfFiles;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -22,16 +19,57 @@ public class CountFilesPlugin implements AnalyzerPlugin {
         this.configuration = generalConfiguration;
     }
 
-
-    static Result processLog(Integer numFiles) {
+    /*
+    public static Result getAllFilesCountOfProject() {
         var result = new Result();
-        result.NumberOfFiles=numFiles;
+        Path gitPath = FileSystems.getDefault().getPath(".");
+        File Root=gitPath.toFile();
+        result.NumberOfFiles=getAllFilesCount(Root);
         return result;
+    }
+    public static int getAllFilesCount(File file) {
+        File[] files = file.listFiles();
+        int count = 0;
+        if(files==null) parseError();
+        for (File f : files) {
+            if (f.isDirectory())
+                count += getAllFilesCount(f);
+            else
+                count++;
+        }
+        return count;
+    }
+    //if we want to count hidden files
+    */
+
+    public static Result getFilesCountOfProject() {
+        var result = new Result();
+        Path gitPath = FileSystems.getDefault().getPath(".");
+        File Root=gitPath.toFile();
+        result.NumberOfFiles=getFilesCount(Root);
+        return result;
+    }
+    public static int getFilesCount(File file) {
+        File[] files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return !file.isHidden();
+            }
+        });
+        int count = 0;
+        if(files==null) parseError();
+        for (File f : files) {
+            if (f.isDirectory())
+                count += getFilesCount(f);
+            else
+                count++;
+        }
+        return count;
     }
 
     @Override
     public void run() {
-        result =  processLog( NumberOfFiles.parseNumberOfFilesCommand() );
+        result =getFilesCountOfProject();
     }
 
     @Override
@@ -39,6 +77,11 @@ public class CountFilesPlugin implements AnalyzerPlugin {
         //If the analysis hasn't already been run, it is run and only then is the result returned
         if (result == null) run();
         return result;
+    }
+
+
+    private static void parseError() {
+        throw new RuntimeException("Can't reqad files");
     }
 
     static class Result implements AnalyzerPlugin.Result {
