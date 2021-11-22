@@ -1,15 +1,10 @@
 package up.visulog.analyzer;
 
 import up.visulog.config.Configuration;
-import up.visulog.gitrawdata.Commit;
-import up.visulog.gitrawdata.NumberOfFiles;
 
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class CountFilesPlugin implements AnalyzerPlugin {
     private final Configuration configuration;
@@ -104,7 +99,6 @@ public class CountFilesPlugin implements AnalyzerPlugin {
             return "<div class=\"module\" hidden>fileCounter</div><div id=\"data-file-number\" hidden><div data-file-number=" + NumberOfFiles + "></div></div>";
         }
     }
-
-
 }
+
 

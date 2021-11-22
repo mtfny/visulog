@@ -23,7 +23,16 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
         File Root=gitPath.toFile();
         HashMap<String,Integer> res=new HashMap<>();
         PL(Root,res);
-        result.PLpercentage=res;
+
+        double total=0.0;
+        for (String value : res.keySet()) {
+            total+=res.getOrDefault(value,0);
+        }
+
+        for (Map.Entry<String, Integer> entry : res.entrySet()) {
+            double percentage= entry.getValue()*100/total;
+            result.PLpercentage.put(entry.getKey(),percentage);
+        }
         return result;
     }
 
@@ -46,6 +55,7 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
 
     public static void add(File file,HashMap<String,Integer> res){
         Integer size= (int)file.length();
+        if(!file.getName().contains(".")){return;}
         String extension= file.getName().substring(file.getName().lastIndexOf("."));
         String pro_lang=p_languages.dictionnary.get(extension);
         if(pro_lang==null) return;
@@ -71,10 +81,10 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
     }
 
     static class Result implements AnalyzerPlugin.Result {
-        private Map<String, Integer> PLpercentage = new HashMap<>();
+        private Map<String, Double> PLpercentage = new HashMap<>();
 
         //Method that returns the hashmap that contains the percentage of each programmibng language
-        public Map<String, Integer> getPLpercentage() {
+        public Map<String, Double> getPLpercentage() {
             return PLpercentage;
         }
 
