@@ -1,11 +1,12 @@
 package up.visulog.analyzer;
 
+import java.util.*;
+
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import up.visulog.gitrawdata.NumberOfLinesPerAuthor;
-import up.visulog.gitrawdata.ProgrammingLanguage;
 
-import java.util.*;
+
 
 public class CountNumberOfLinesPerAuthor implements AnalyzerPlugin{
     private final Configuration configuration;
