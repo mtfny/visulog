@@ -1,40 +1,73 @@
 package up.visulog.analyzer;
 
 import up.visulog.config.Configuration;
-import up.visulog.gitrawdata.Commit;
-import up.visulog.gitrawdata.ProgrammingLanguage;
-
+import java.io.File;
+import java.io.FileFilter;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CountPLPercentagePlugin implements AnalyzerPlugin{
     private final Configuration configuration;
     private Result result;
+    private static final Programming_languages p_languages=new Programming_languages();
 
     public CountPLPercentagePlugin(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    static Result processPLpercentage(List<ProgrammingLanguage> Planguages) {
+    public static Result getPL_percentage() {
         var result = new Result();
-        int total_size=0;
-        for (var PL : Planguages) {
-            total_size+= PL.size;
+        Path gitPath = FileSystems.getDefault().getPath(".");
+        File Root=gitPath.toFile();
+        HashMap<String,Integer> res=new HashMap<>();
+        PL(Root,res);
+
+        double total=0.0;
+        for (String value : res.keySet()) {
+            total+=res.getOrDefault(value,0);
         }
-        for (var PL : Planguages) {
-            var nb = result.PLpercentage.getOrDefault(PL.name, 0.0);
-            double c= nb + PL.size;
-            double percentage=PercentageComparedTo(total_size,c);
-            result.PLpercentage.put(PL.name, nb + PL.size);
+
+        for (Map.Entry<String, Integer> entry : res.entrySet()) {
+            double percentage= entry.getValue()*100/total;
+            result.PLpercentage.put(entry.getKey(),percentage);
         }
         return result;
     }
 
+    public static void PL(File file,HashMap<String,Integer> res) {
+        File[] files = file.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return !file.isHidden();
+            }
+        });
+        if(files==null) parseError();
+        for (File f : files) {
+            if (!f.isDirectory()) {
+                add(f, res);
+            }else{
+                PL(f, res);
+            }
+        }
+    }
+
+    public static void add(File file,HashMap<String,Integer> res){
+        Integer size= (int)file.length();
+        if(!file.getName().contains(".")){return;}
+        String extension= file.getName().substring(file.getName().lastIndexOf("."));
+        String pro_lang=p_languages.dictionnary.get(extension);
+        if(pro_lang==null) return;
+        Integer another_size=res.getOrDefault(pro_lang,0);
+        res.put(pro_lang,another_size+size);
+    }
+
+
 
     @Override
     public void run() {
-        result = processPLpercentage(ProgrammingLanguage.parsePLpercentageCommand());
+        result = getPL_percentage();
     }
 
     @Override
@@ -43,13 +76,17 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
         return result;
     }
 
-    private static double PercentageComparedTo(double total,double x){ double res= (x*100)/total;return res; }
+    private static void parseError() {
+        throw new RuntimeException("Can't reqad files");
+    }
 
     static class Result implements AnalyzerPlugin.Result {
-        private final Map<String, Double> PLpercentage = new HashMap<>();
+        private Map<String, Double> PLpercentage = new HashMap<>();
 
         //Method that returns the hashmap that contains the percentage of each programmibng language
-        public Map<String, Double> getPLpercentage() { return PLpercentage; }
+        public Map<String, Double> getPLpercentage() {
+            return PLpercentage;
+        }
 
         @Override
         //Method that returns the PLpercentage list in String form
@@ -66,6 +103,64 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
             }
             html.append("</div>");
             return html.toString();
+        }
+    }
+
+    private static class Programming_languages{
+        private final HashMap<String,String> dictionnary ;
+        public Programming_languages() {
+            this.dictionnary=new HashMap<>();
+            dictionnary.put(".css","CSS");
+            dictionnary.put(".java","Java");
+            dictionnary.put(".js","JavaScript");
+            dictionnary.put("._js","JavaScript");
+            dictionnary.put(".bones","JavaScript");
+            dictionnary.put(".es","JavaScript");
+            dictionnary.put(".es6","JavaScript");
+            dictionnary.put(".frag","JavaScript");
+            dictionnary.put(".gs","JavaScript");
+            dictionnary.put(".jake","JavaScript");
+            dictionnary.put(".jsb","JavaScript");
+            dictionnary.put(".jscad","JavaScript");
+            dictionnary.put(".jsfl","JavaScript");
+            dictionnary.put(".jsm","JavaScript");
+            dictionnary.put(".jss","JavaScript");
+            dictionnary.put(".njs","JavaScript");
+            dictionnary.put(".pac","JavaScript");
+            dictionnary.put(".sjs","JavaScript");
+            dictionnary.put(".ssjs","JavaScript");
+            dictionnary.put(".sublime-build","JavaScript");
+            dictionnary.put(".sublime-commands","JavaScript");
+            dictionnary.put(".sublime-completions","JavaScript");
+            dictionnary.put(".sublime-keymap","JavaScript");
+            dictionnary.put(".sublime-macro","JavaScript");
+            dictionnary.put(".sublime-menu","JavaScript");
+            dictionnary.put(".sublime-mousemap","JavaScript");
+            dictionnary.put(".sublime-project","JavaScript");
+            dictionnary.put(".sublime-settings","JavaScript");
+            dictionnary.put(".sublime-theme","JavaScript");
+            dictionnary.put(".sublime-workspace","JavaScript");
+            dictionnary.put(".sublime_metrics","JavaScript");
+            dictionnary.put(".sublime_session","JavaScript");
+            dictionnary.put(".xsjs","JavaScript");
+            dictionnary.put(".html","HTML");
+            dictionnary.put(".htm","HTML");
+            dictionnary.put(".html.hl","HTML");
+            dictionnary.put(".st","HTML");
+            dictionnary.put(".xht","HTML");
+            dictionnary.put(".xhtml","HTML");
+            dictionnary.put(".php","PHP");
+            dictionnary.put(".aw","PHP");
+            dictionnary.put(".ctp","PHP");
+            dictionnary.put(".fcgi","PHP");
+            dictionnary.put(".inc","PHP");
+            dictionnary.put(".php3","PHP");
+            dictionnary.put(".php4","PHP");
+            dictionnary.put(".phps","PHP");
+            dictionnary.put(".phpt","PHP");
+            dictionnary.put(".kt","Kotlin");
+            dictionnary.put(".ktm","Kotlin");
+            //incomplete list
         }
     }
 
