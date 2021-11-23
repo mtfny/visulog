@@ -80,8 +80,9 @@ public class writeHTML {
         try {
 
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
-                Desktop.getDesktop().browse(u);
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                desktop.browse(u);
+            }
 
         }
         catch (Exception e){

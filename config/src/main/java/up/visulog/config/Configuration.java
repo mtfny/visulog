@@ -42,7 +42,9 @@ public class Configuration implements java.io.Serializable {
 	}
     
     public void setPluginConfig(PluginConfig config) {
-    	
+    	for(Map.Entry<String, PluginConfig> entry : plugins.entrySet()) {
+    		plugins.put(entry.getKey(), config);
+    	}
     }
     
     //Saves a configuration file in the folder in configFilePath

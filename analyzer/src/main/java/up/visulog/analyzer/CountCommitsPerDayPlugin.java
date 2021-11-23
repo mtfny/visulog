@@ -81,7 +81,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
 
     static class Result implements AnalyzerPlugin.Result {
     	//On utilise une treeMap car les éléments sont triés par clé (donc par date)
-        private final Map<DateObj, Integer> commitsPerDate = new TreeMap<>();
+        private final TreeMap<DateObj, Integer> commitsPerDate = new TreeMap<>();
 
         //Method that returns the hashmap that contains the number of commits associated with each day
         Map<DateObj, Integer> getCommitsPerDate() {
@@ -107,7 +107,10 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
                     lastShortDate = shortDate;
             	}
             }
-            html.append("</div><div class=\"days\">");
+            
+            //Le numéro du premier jour trouvé est utile pour l'affichage en Javascript
+            int firstDay = commitsPerDate.isEmpty() ? -1 : commitsPerDate.firstKey().weekDay;
+            html.append("</div><div class=\"days\" data-day-start=\"" + firstDay + "\">");
             
             for(var item : commitsPerDate.entrySet()) {
             	html.append("<div class=\"case\" data-commit-number=\"").append(item.getValue()).append("\" data-date=\"").append(item.getKey().getDay() + " " + item.getKey().getMonth()).append("\"></div>");
