@@ -3,6 +3,8 @@ package up.visulog.analyzer;
 import up.visulog.config.Configuration;
 import java.io.File;
 import java.io.FileFilter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -17,13 +19,11 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
         this.configuration = configuration;
     }
 
-    public static Result getPL_percentage() {
+    public static Result getPL_percentage(Path gitPath) {
         var result = new Result();
-        Path gitPath = FileSystems.getDefault().getPath(".");
         File Root=gitPath.toFile();
         HashMap<String,Integer> res=new HashMap<>();
         PL(Root,res);
-
         double total=0.0;
         for (String value : res.keySet()) {
             total+=res.getOrDefault(value,0);
@@ -67,7 +67,7 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
 
     @Override
     public void run() {
-        result = getPL_percentage();
+        result = getPL_percentage(configuration.getGitPath());
     }
 
     @Override
@@ -163,5 +163,4 @@ public class CountPLPercentagePlugin implements AnalyzerPlugin{
             //incomplete list
         }
     }
-
 }
