@@ -3,31 +3,33 @@ package up.visulog.gitrawdata;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class NumberOfLinesPerAuthor {
     private final String name;
+    private Date date;
     private int lines_added;
     private int lines_removed;
 
-    public NumberOfLinesPerAuthor(String name, int lines_added, int lines_removed) {
+    public NumberOfLinesPerAuthor(String name, Date date, int lines_added, int lines_removed) {
         this.name = name;
+        this.date = date;
         this.lines_added = lines_added;
         this.lines_removed = lines_removed;
     }
 
-    public NumberOfLinesPerAuthor(String name) {
+    public NumberOfLinesPerAuthor(String name,Date date) {
         this.name = name;
+        this.date = date;
         this.lines_added = 0;
         this.lines_removed = 0;
     }
 
-    //git log --author="_Your_Name_Here_" --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
+    //git log --pretty="%nName :%an %nDate :%ad" --numstat
     //a function that execute a command
-    public static BufferedReader executeCommand(List<String> command) {
-        Path gitPath = FileSystems.getDefault().getPath(".");
+    public static BufferedReader executeCommand(Path gitPath,List<String> command) {
         ProcessBuilder builder = new ProcessBuilder( command).directory(gitPath.toFile());
         Process process;
         try {
@@ -35,7 +37,7 @@ public class NumberOfLinesPerAuthor {
         } catch (IOException e) {
             String message="";
             for(String s : command){
-                message+=s+" ";
+                message=message+s+" ";
             }
             throw new RuntimeException("Error running \"git "+message+"\".", e);
         }
@@ -44,13 +46,13 @@ public class NumberOfLinesPerAuthor {
         return reader;
     }
 
-    public static List<NumberOfLinesPerAuthor> parseLogFromCommand() {
+    public static List<NumberOfLinesPerAuthor> parseLogFromCommand(Path gitPath) {
         List<String> command = new ArrayList<>();
         command.add("git");
         command.add("log");
-        command.add("--pretty=%n %an");
+        command.add("--pretty=%nName :%an %nDate :%ad");
         command.add("--numstat");
-        return parseNumberOfLines( executeCommand(command) );
+        return parseNumberOfLines( executeCommand(gitPath,command) );
     }
 
     public static List<NumberOfLinesPerAuthor> parseNumberOfLines(BufferedReader reader) {
@@ -71,6 +73,20 @@ public class NumberOfLinesPerAuthor {
             }
             current_Author = parseNumberOfLinesPerAuthor(reader);
         }
+        for (NumberOfLinesPerAuthor n: result) {
+            n.date=null;
+        }
+        return result;
+    }
+
+    public static List<NumberOfLinesPerAuthor> getAllLinesPerAuthor(BufferedReader reader) {
+        var result = new ArrayList<NumberOfLinesPerAuthor>();
+        Optional<NumberOfLinesPerAuthor> current_Author = parseNumberOfLinesPerAuthor(reader);
+
+        while (current_Author.isPresent()) {
+            result.add(current_Author.get());
+            current_Author = parseNumberOfLinesPerAuthor(reader);
+        }
         return result;
     }
 
@@ -86,7 +102,19 @@ public class NumberOfLinesPerAuthor {
             NumberOfLinesPerAuthor current_Author = null;
 
             do {
-                if (!line.isEmpty()) current_Author = new NumberOfLinesPerAuthor(line);
+                if (!line.isEmpty()) {
+                    if(!line.startsWith("Name :")) parseError();
+                    String name=line.substring(line.indexOf(":")+1);
+                    line = input.readLine();
+                    if (line == null) {
+                        return Optional.empty();
+                    }
+                    line = line.trim();
+                    if(!line.startsWith("Date :")) parseError();
+                    String datest=line.substring(line.indexOf(":")+1);
+                    Date date=setDate(datest);
+                    current_Author = new NumberOfLinesPerAuthor(name,date);
+                }
                 line = input.readLine();
                 if (line == null) {
                     return Optional.empty();
@@ -129,30 +157,47 @@ public class NumberOfLinesPerAuthor {
         }
         return 0;
     }
+
+    private static Date setDate(String dateSt) { // Convert a String into a Date and change the date attribute of the commit
+        SimpleDateFormat s= new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        Date date=null;
+        try {
+            date=s.parse(dateSt);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
     // Helper function for generating parsing exceptions. This function *always* quits on an exception. It *never* returns.
     private static void parseError() {
         throw new RuntimeException("Wrong result format.");
     }
     @Override
     public String toString() {
-        return "Number Of Lines by" +
-                "name='" + name + '\'' +
-                ", lines_added=" + lines_added +
-                ", lines_removed=" + lines_removed +
-                " total="+(lines_added-lines_removed) +
-                '}';
+        SimpleDateFormat s= new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+        String res = "NumberOfLinesPerAuthor{" + "name=" + name ;
+        if(date!=null)   res+=" date=" + s.format(date).toString();
+        res+=" lines_added=" + lines_added + " lines_removed=" + lines_removed + " total="+( lines_added-lines_removed)+ '}';
+        return res;
     }
 
     public String getName() {
         return name;
     }
-
     public int getLines_added() {
         return lines_added;
     }
-
     public int getLines_removed() {
         return lines_removed;
     }
+    public Date getDate() {
+        return date;
+    }
 
+    public static void main(String[] args) {
+        Path gitPath = FileSystems.getDefault().getPath(".");
+        var res=parseLogFromCommand(gitPath);
+        System.out.println(res.toString());
+    }
 }

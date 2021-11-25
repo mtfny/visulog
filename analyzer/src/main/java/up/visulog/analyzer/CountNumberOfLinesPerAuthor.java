@@ -19,7 +19,7 @@ public class CountNumberOfLinesPerAuthor implements AnalyzerPlugin{
     @Override
     public void run() {
         if(configuration != null)
-            result = new Result(NumberOfLinesPerAuthor.parseLogFromCommand());
+            result = new Result(NumberOfLinesPerAuthor.parseLogFromCommand(configuration.getGitPath()));
     }
 
     @Override
