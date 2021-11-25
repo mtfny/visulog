@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import java.lang.reflect.*;
@@ -59,7 +61,7 @@ public class CLILauncher {
         boolean openHtml = false;
 
         var plugins = new HashMap<String, PluginConfig>();
-        Map<String,String> pluginParameters = new HashMap<String,String>();
+        PluginConfig pluginConfig = new PluginConfig();
 
         //This code looks at every argument ('''word''') of the string we entered in the terminal.
         for (var arg : args) {
@@ -104,9 +106,11 @@ public class CLILauncher {
             
             else if(arg.startsWith("-")) {
             	String[] parts = arg.split("=");
-                if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
-                	pluginParameters.put(parts[0], parts[1]);
-                }
+                if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) 
+                	pluginConfig.addSetting(parts[0], parts[1]);
+                
+                else if(parts.length == 1 && parts[0].length() > 0)
+                	pluginConfig.addOption(parts[0]);
             }
             
             else {
@@ -117,8 +121,11 @@ public class CLILauncher {
         }
         //At the end we verify that everything is working by checking if the path in gitPath is
         //in an existing directory or not.
-        if (check_directory_exists(gitPath)) 
-        	return Optional.of(new Configuration(gitPath, configFilePath, plugins, openHtml));
+        if (check_directory_exists(gitPath)) {
+        	Configuration res = new Configuration(gitPath, configFilePath, plugins, openHtml);
+        	res.setPluginConfig(pluginConfig);
+        	return Optional.of(res);
+        }
 
         else return Optional.empty();
     }   
