@@ -50,15 +50,14 @@ public class Configuration implements java.io.Serializable {
     //Saves a configuration file in the folder in configFilePath
     public void saveConfigFile() {
     	try {
-    		File configFile = getConfigFile();
+    		File configFile = getConfigFile(true);
     		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(configFile));
     		oos.writeObject(this);
     		oos.close();
-    		System.out.println("Config file saved to " + configFilePath + configFileName);
+    		System.out.println("Config file saved to " + configFilePath);
     	}
     	
     	catch(IOException e) {
-    		e.printStackTrace();
     		System.out.println("ERROR : Configuration file couldn't be saved");
     	}
     	
@@ -67,12 +66,17 @@ public class Configuration implements java.io.Serializable {
     //Loads a configuration file at the at the location passed as a parameter
     public static Configuration loadConfigFile(String configFilePath) {
     	try {
-    		File configFile = new File(configFilePath + configFileName);
-    		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile));
-    		Configuration res = (Configuration)ois.readObject();    		
-    		ois.close();
-    		System.out.println("Config file Loaded");
-    		return res;
+    		File configFile = new File(configFilePath);
+    		if(configFile.exists() && configFile.isFile()) {
+    			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile));
+    			Configuration res = (Configuration)ois.readObject();    		
+    			ois.close();
+    			System.out.println("Config file Loaded");
+    			return res;	
+    		}
+    		
+    		System.out.println("ERROR : Configuration file doesn't exist");
+    		return null;
     	}
     	
     	catch(IOException|ClassNotFoundException e) {
@@ -83,18 +87,25 @@ public class Configuration implements java.io.Serializable {
     }
     
     //Returns configuration file if it exists, else it will create one
-    private File getConfigFile() {
-		File configFile = new File(configFilePath + configFileName);
+    private File getConfigFile(boolean createIfDoesNotExist) {
+		File configFile = new File(configFilePath);
     	try {
+    		if(configFile.isDirectory())
+    			configFile = new File(configFilePath + File.pathSeparator + configFileName);
+    		
     		//Doesn't do anything if file already exists
-    		configFile.createNewFile();
+    		if(createIfDoesNotExist)
+    			configFile.createNewFile();
     	}
     	
     	catch(IOException e){
     		System.out.println("An error has occured when creating config file");
     	}
     	
-		return configFile;
+    	if(configFile.exists())
+    		return configFile;
+    	else
+    		return null;
     }
     
     //Returns a deep copy of the plugins map

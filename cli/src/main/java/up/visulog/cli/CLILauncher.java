@@ -59,6 +59,7 @@ public class CLILauncher {
         String gitPath = FileSystems.getDefault().getPath(".").toString();
         String configFilePath = FileSystems.getDefault().getPath(".").toString();
         boolean openHtml = false;
+        boolean saveConfigFile = false;
 
         var plugins = new HashMap<String, PluginConfig>();
         PluginConfig pluginConfig = new PluginConfig();
@@ -86,17 +87,17 @@ public class CLILauncher {
                         case "--addPlugin":
                             addPlugin(pValue, plugins);
                             break;
-
-                        case "--loadConfigFile":
-                            Configuration res = Configuration.loadConfigFile(configFilePath);
-                            if(check_directory_exists(res.getGitPath().toString()) == true)
-                            	return Optional.of(res);
-                            return Optional.empty();
                             
                         case "--justSaveConfigFile":
-                            Configuration toSave = new Configuration(gitPath, configFilePath, plugins, openHtml);
-                            toSave.saveConfigFile();
-                            return Optional.empty();
+                        	saveConfigFile = true;
+                        	configFilePath = "../" + pValue;
+                        	break;
+                        	
+                        case "--loadConfigFile":
+                        	configFilePath = "../" + pValue;
+                            Configuration res = Configuration.loadConfigFile(configFilePath);
+                            if(res != null && check_directory_exists(res.getGitPath().toString()) == true)
+                            	return Optional.of(res);
                             
                         default:
                             return Optional.empty();
@@ -124,6 +125,10 @@ public class CLILauncher {
         if (check_directory_exists(gitPath)) {
         	Configuration res = new Configuration(gitPath, configFilePath, plugins, openHtml);
         	res.setPluginConfig(pluginConfig);
+        	
+        	if(saveConfigFile)
+        		res.saveConfigFile();
+        	
         	return Optional.of(res);
         }
 
