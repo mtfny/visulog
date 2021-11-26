@@ -14,14 +14,15 @@ public class CountFilesPlugin implements AnalyzerPlugin {
         this.configuration = generalConfiguration;
     }
 
-    /*
-    public static Result getAllFilesCountOfProject() {
+
+    //including hidden files
+    public static Result getAllFilesCountOfProject(Path gitPath) {
         var result = new Result();
-        Path gitPath = FileSystems.getDefault().getPath(".");
         File Root=gitPath.toFile();
         result.NumberOfFiles=getAllFilesCount(Root);
         return result;
     }
+
     public static int getAllFilesCount(File file) {
         File[] files = file.listFiles();
         int count = 0;
@@ -34,12 +35,11 @@ public class CountFilesPlugin implements AnalyzerPlugin {
         }
         return count;
     }
-    //if we want to count hidden files
-    */
 
-    public static Result getFilesCountOfProject() {
+
+    //Path gitPath = FileSystems.getDefault().getPath(".");
+    public static Result getFilesCountOfProject(Path gitPath) {
         var result = new Result();
-        Path gitPath = FileSystems.getDefault().getPath(".");
         File Root=gitPath.toFile();
         result.NumberOfFiles=getFilesCount(Root);
         return result;
@@ -64,7 +64,7 @@ public class CountFilesPlugin implements AnalyzerPlugin {
 
     @Override
     public void run() {
-        result =getFilesCountOfProject();
+        result =getFilesCountOfProject(configuration.getGitPath());
     }
 
     @Override
