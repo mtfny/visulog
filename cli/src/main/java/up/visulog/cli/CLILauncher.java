@@ -85,7 +85,11 @@ public class CLILauncher {
                             break;
 
                         case "--addPlugin":
-                            addPlugin(pValue, plugins);
+                        	if(plugins.containsKey(pValue)) {
+                        		return Optional.empty();
+                        	}else {
+                        		addPlugin(pValue, plugins);
+                        	}
                             break;
                             
                         case "--justSaveConfigFile":

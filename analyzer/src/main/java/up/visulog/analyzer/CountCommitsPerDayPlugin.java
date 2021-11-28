@@ -50,10 +50,8 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         	}
         }
         
-        //If the earliest Commit in the gitLog list did not happen on a Monday, the variable dateFirst takes the value of the preceding Monday, for the sake of presenting the resulting html file with complete weeks that all start with Mondays.
-        int dayOfWeek = dateFirst.weekDay;
+        //The dates of the first and last commits of the gitlog list are retrieved.
         LocalDate first = LocalDate.of(dateFirst.year, dateFirst.month+1, dateFirst.day);
-        first = first.minusDays(dayOfWeek);
         LocalDate last = LocalDate.of(dateLast.year, dateLast.month+1, dateLast.day+1);
         
         //We iterate between the dates of the earliest and latest commits of the gitLog list. If a date in that interval of time is not a key in the result.commitsPerDate TreeMap (if no commits were published that day), then it is added as a key to the TreeMap with an associated value of 0 (so as to indicate that no commits were published that day).
