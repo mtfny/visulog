@@ -85,9 +85,7 @@ public class CLILauncher {
                             break;
 
                         case "--addPlugin":
-                        	if(plugins.containsKey(pValue)) {
-                        		return Optional.empty();
-                        	}else {
+                        	if(!plugins.containsKey(pValue)) {
                         		addPlugin(pValue, plugins);
                         	}
                             break;
