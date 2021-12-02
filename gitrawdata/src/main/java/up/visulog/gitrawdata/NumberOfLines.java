@@ -28,7 +28,7 @@ public class NumberOfLines{
 		int delLines;
 		
 		//if the list is empty it means that is the first time we have counted the lines
-		if(days.isEmpty()) {
+		if(getDays().isEmpty()) {
 			yesterday = null;
 		}
 		
@@ -46,7 +46,7 @@ public class NumberOfLines{
 		}
 			
 		//add the day in the list
-		days.add(this);
+		getDays().add(this);
 		
 	}
 	
@@ -99,23 +99,23 @@ public class NumberOfLines{
 		}
 		//the 3 values lines added,deleted and total lines are now int a tab
 		List <Integer> datas = getData(splited);
-		if(((NumberOfLines) days.get(days.size()-1)).getDate().equals(LocalDate.now())) {
+		if(((NumberOfLines) getDays().get(getDays().size()-1)).getDate().equals(LocalDate.now())) {
 			//if the day has already been analysed we are doing an update 
-			Update(days.get(days.size()-1),datas.get(0),datas.get(1));
+			Update(getDays().get(getDays().size()-1),datas.get(0),datas.get(1));
 		}else {
 			//else create the day in the list
 			NumberOfLines newDay = new NumberOfLines(datas.get(0),datas.get(1));
 		}
 		
 		
-		return days;
+		return getDays();
 		
 	} catch (IOException e) {
 		
 		e.printStackTrace();
 	}
         
-		return days;
+		return getDays();
         
         
     }
@@ -155,6 +155,10 @@ public class NumberOfLines{
 		return this.name;
 	}
 	
+	public static List<NumberOfLines> getDays() {
+		return days;
+	}
+
 	private static boolean isNumber(String str){
    
         String regex = "[0-9]+";
@@ -173,7 +177,7 @@ public class NumberOfLines{
         return m.matches();
     }
 	
-	private  static List<Integer> getData(ArrayList <String> splited) {
+	public static List<Integer> getData(ArrayList <String> splited) {
 		//put the numbers finded in a list
 		List <Integer> result = new ArrayList <Integer>();
 		for(String s: splited) {
@@ -186,8 +190,8 @@ public class NumberOfLines{
 	
 	
 	
-	private static void Update(Object object,int newadd,int newdel) {
-		days.remove(object);
+	public static void Update(Object object,int newadd,int newdel) {
+		getDays().remove(object);
 		object = new NumberOfLines(newadd,newdel);
 	}
 	
