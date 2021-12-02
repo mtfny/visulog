@@ -45,14 +45,18 @@ public class CountLinesPerDay implements AnalyzerPlugin{
 		public String getResultAsString() {
 			String s= "";
 			for(NumberOfLines today:data)
-			s += today.toString();
+			s += today.toString()+"\n";
 			return s;
 		}
 
 		@Override
 		public String getResultAsHtmlDiv() {
-			
-			return null;
+			StringBuilder html = new StringBuilder("<div>Lines per Days: <ul>");
+            for (NumberOfLines item : data) {
+                html.append("<li>").append(item.getName()).append(": ").append("lines added: ").append(item.getAddDay()).append("lines removed: ").append(item.getDelDay()).append("total").append(item.getAddDay()-item.getDelDay()).append("</li>");
+            }
+            html.append("</ul></div>");
+            return html.toString();
 		}
     	
     }
