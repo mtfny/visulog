@@ -18,9 +18,7 @@ public class CountLinesPerDay implements AnalyzerPlugin{
     	this.configuration = config;
     }
     
-   static Result processLog() {
-    	return null;
-    }
+ 
     
     @Override
     public void run() {
