@@ -45,7 +45,7 @@ public class Commit {
     public static List<Commit> parseLogFromCommand(Path gitPath) {
         return parseLogFromCommand(gitPath, null, null);
     }
-
+    
     public static List<Commit> parseLogFromCommand(Path gitPath, String date1, String date2) {
         if (date1 != null && date2 != null) {
             return parseLog(executeGitCommand(gitPath,"log --since=" + date1 + " --until=" + date2));
