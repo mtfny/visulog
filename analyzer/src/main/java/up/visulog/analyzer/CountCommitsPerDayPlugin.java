@@ -25,7 +25,9 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     		return result;
     	
     	Calendar cal = Calendar.getInstance();
-    	
+
+		
+		
     	//Two DateObj variables are created in order to retrieve the dates of both the earliest and latest commits contained in the gitLog list.
     	DateObj dateFirst = null;
     	DateObj dateLast = null;
