@@ -26,7 +26,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     	
     	Calendar cal = Calendar.getInstance();
 
-		
+
 		
     	//Two DateObj variables are created in order to retrieve the dates of both the earliest and latest commits contained in the gitLog list.
     	DateObj dateFirst = null;
@@ -108,7 +108,9 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
 									//Alors on passe nos parametres à la fonction. Gitlog prend le format AAAA/MM/JJ
 									String formatGL1 = datedebut[2] + "-" + datedebut[1] + "-" + datedebut[0];
 									String formatGL2 = datefin[2] + "-" + datefin[1] + "-" + datefin[0];
-							        result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), debut, fin));
+									System.out.println(formatGL1);
+									System.out.println(formatGL2);
+							        result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), formatGL1, formatGL2));
 								}
 							}
 						}
@@ -190,12 +192,14 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     	}
 
 		public DateObj(int day, int month, int year) {
-			if (day > 0 && day < 32) this.day = day;
+			if (day >= 1 && day <= 31) this.day = day;
 			else this.day = 0;
 
 			if (year >= 1990) this.year = year;
 			else this.year = 0;
-			this.month = month-1 < 0 || month-1 >= months.length ? 0 : month-1;
+
+			if (month >= 1 && month <= 12) this.month = month;
+			else this.month = 0;
 			this.weekDay = 0;
 		}
     	

@@ -48,9 +48,10 @@ public class Commit {
     
     public static List<Commit> parseLogFromCommand(Path gitPath, String date1, String date2) {
         if (date1 != null && date2 != null) {
+            System.out.println("log --since=" + date1 + " --until=" + date2);
             return parseLog(executeGitCommand(gitPath,"log --since=" + date1 + " --until=" + date2));
         }
-        return  parseLog(executeGitCommand(gitPath, "log"));
+        return parseLog(executeGitCommand(gitPath, "log"));
     }
 
     public static List<Commit> parseLog(BufferedReader reader) {
