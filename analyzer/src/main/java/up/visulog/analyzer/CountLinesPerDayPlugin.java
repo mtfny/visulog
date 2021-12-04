@@ -10,11 +10,11 @@ import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.NumberOfLines;
 import up.visulog.gitrawdata.NumberOfLinesPerAuthor;
 
-public class CountLinesPerDay implements AnalyzerPlugin{
+public class CountLinesPerDayPlugin implements AnalyzerPlugin{
 	private final Configuration configuration;
     private Result result;
     
-    public CountLinesPerDay(Configuration config) {
+    public CountLinesPerDayPlugin(Configuration config) {
     	this.configuration = config;
     }
     
@@ -22,7 +22,7 @@ public class CountLinesPerDay implements AnalyzerPlugin{
     
     @Override
     public void run() {
-    	result = new Result(NumberOfLines.parseLogFromCommand());
+    	result = new Result(NumberOfLines.parseLogFromCommand(configuration.getGitPath()));
     }
     
     @Override
@@ -37,12 +37,14 @@ public class CountLinesPerDay implements AnalyzerPlugin{
     	 
     	 public Result(List<NumberOfLines> gitLog) {
     		 
+    		 this.data = gitLog;
     	 }
 
 		@Override
 		public String getResultAsString() {
+			
 			String s= "";
-			for(NumberOfLines today:data)
+			for(NumberOfLines today: this.data)
 			s += today.toString()+"\n";
 			return s;
 		}

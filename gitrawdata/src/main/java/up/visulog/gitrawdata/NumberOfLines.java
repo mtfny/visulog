@@ -1,6 +1,7 @@
 package up.visulog.gitrawdata;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,26 +44,33 @@ public class NumberOfLines{
 			this.setAddDay(addlines);
 			this.setDelDay(delLines);
 		
+		}else {
+			this.addDay = add;
+			this.delDay = del;
 		}
 			
 		//add the day in the list
-		getDays().add(this);
+		days.add(this);
 		
 	}
 	
 	public NumberOfLines() {
-		this.date = null;
+		this.date = LocalDate.now();
 		
 	}
 	
 	//git log --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
     //we get all the lines 
-    public static BufferedReader executeCommand(List<String> command) {
-        Path gitPath = FileSystems.getDefault().getPath(".");
+    public static BufferedReader executeCommand(Path gitPath,List<String> command) {
+        File f =gitPath.toFile();
+        
         ProcessBuilder builder = new ProcessBuilder(command).directory(gitPath.toFile());
-        Process process;
+        
+        Process process ;
         try {
+        	
             process = builder.start();
+            
         } catch (IOException e) {
             String message="";
             for(String s : command){
@@ -75,12 +83,14 @@ public class NumberOfLines{
         return reader;
     }
     
-    public static List<NumberOfLines> parseLogFromCommand() {
+    public static List<NumberOfLines> parseLogFromCommand(Path gitPath) {
         List<String> command = new ArrayList<>();
-        command.add("git");
-        command.add("log");
-        command.add("--pretty=%n %an");
-        command.add("--numstat");
+        command.add("git log");
+        command.add("--author= --pretty=tformat: --numstat");
+        command.add("|");
+        command.add("awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf \"added lines: %s, removed lines: %s, total lines: %s\\n\", add, subs, loc }'");
+       
+        
         return parseNumberOfLines( executeCommand(command) );
     }
     
@@ -89,26 +99,31 @@ public class NumberOfLines{
        try {
 		String line = reader.readLine();
 		
+		/*if(line == null || line == "") {
+			return days;
+		} */
+		
 		String split[] = line.split(" ");
-		ArrayList<String> splited = new ArrayList();
+		ArrayList<String> splited = new ArrayList<String>();
 		int i =0;
 		
 		for(String s:split) {
 			String[] str = s.split(",",0);
 			splited.add(str[i]);
 		}
-		//the 3 values lines added,deleted and total lines are now int a tab
+		//the 3 values lines added,deleted and total lines are now into a tab
 		List <Integer> datas = getData(splited);
+		
 		if(((NumberOfLines) getDays().get(getDays().size()-1)).getDate().equals(LocalDate.now())) {
-			//if the day has already been analysed we are doing an update 
-			Update(getDays().get(getDays().size()-1),datas.get(0),datas.get(1));
+			//if the day has already been analyzed we are doing an update 
+			((NumberOfLines) days.get(days.size()-1)).Update(datas.get(0),datas.get(1));
+			
+			return days;
 		}else {
 			//else create the day in the list
 			NumberOfLines newDay = new NumberOfLines(datas.get(0),datas.get(1));
+			return days;
 		}
-		
-		
-		return getDays();
 		
 	} catch (IOException e) {
 		
@@ -121,7 +136,8 @@ public class NumberOfLines{
     }
     
     public String toString() {
-    	return "Data for "+this.name+" lines added: "+this.getAddDay()+"lines deleted: "+this.getDelDay();
+    	int total = this.getAddDay()-this.getDelDay();
+    	return "Data for "+this.name+" lines added: "+this.getAddDay()+" lines deleted: "+this.getDelDay()+" total today: "+total;
     }
 	public int getAddDay() {
 		return addDay;
@@ -190,9 +206,29 @@ public class NumberOfLines{
 	
 	
 	
-	public static void Update(Object object,int newadd,int newdel) {
-		getDays().remove(object);
-		object = new NumberOfLines(newadd,newdel);
+	public void Update(int newadd,int newdel) {
+		//today is deleted and replace in the list
+		 NumberOfLines up = new NumberOfLines();
+		 
+		 if(this.yesterday!=null) {
+			 up.setYesterday(this.getYesterday());
+			 up.setAddDay(this.yesterday.getAddDay()-newadd);
+			 up.setAddDay(this.yesterday.getDelDay()-newdel);
+			 
+			 if(up.getAddDay() < 0)
+				 up.setAddDay(0);
+			 if(up.getDelDay()<0)
+				 up.setDelDay(0);
+		 }else {
+			 up.setAddDay(newadd);
+			 up.setDelDay(newdel);
+		 }
+		
+		 up.name = LocalDate.now().toString();
+		 
+		 days.remove(this);
+		 
+		 days.add(up);
 	}
 	
 	
