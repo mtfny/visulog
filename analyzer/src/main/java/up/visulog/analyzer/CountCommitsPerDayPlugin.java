@@ -3,6 +3,7 @@ package up.visulog.analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.time.LocalDate;
 
 import java.util.TreeMap;
@@ -68,61 +69,61 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
 
     @Override
     public void run() {
+    	List<String> command = new LinkedList<String>();
+    	command.add("log");
+    	
     	if(configuration != null) {
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerDay").getSettings();
-			if (settings.isEmpty()) {
-				result = processLog(Commit.parseLogFromCommand(configuration.getGitPath()));
-			}
-			else {
-				//On verifie qu'on a bien des clés "-Debut" et "-Fin".
-				if (settings.containsKey("-Debut") && settings.containsKey("-Fin")) {
-					String debut = settings.get("-Debut");
-					String fin = settings.get("-Fin");
-					
-					//On créé des tableux de nos strings de date.
-					String[] datedebut = debut.split("/");
-					String[] datefin = fin.split("/");
-
-					//On verifie que l'on un tableau de dates de taille 3 chacuns pour le JJ/MM/AAAA.
-					if (datedebut.length == 3 && datefin.length == 3) {
-						//On regarde si chaque partie de notre string est une date valide.
-						try{
-							int daydebut = Integer.parseInt(datedebut[0]);
-							int moisdebut = Integer.parseInt(datedebut[1]);
-							int anneedebut = Integer.parseInt(datedebut[2]);
-							
-							int dayfin = Integer.parseInt(datefin[0]);
-							int moisfin = Integer.parseInt(datefin[1]);
-							int anneefin = Integer.parseInt(datefin[2]);
-
-							DateObj dateObjDebut = new DateObj(daydebut, moisdebut, anneedebut);
-							DateObj dateObjFin = new DateObj(dayfin, moisfin, anneefin);
-
-							//Regarde si les jours sont bien entre 1 et 31, les mois entre 1 et 12 etc. avec l'aide du constructeur de
-							//la date
-							if (dateObjDebut.getDay() != 0 && dateObjDebut.getIntMonth() != 0 && dateObjDebut.getYear() != 0
-							&& dateObjFin.getDay() != 0 && dateObjFin.getIntMonth() != 0 && dateObjFin.getYear() != 0) {
-								//Si la date de début est inferieure à la date de fin.
-
-								if (dateObjDebut.compareTo(dateObjFin) == -1) {
-									//Alors on passe nos parametres à la fonction. Gitlog prend le format AAAA/MM/JJ
-									String formatGL1 = datedebut[2] + "-" + datedebut[1] + "-" + datedebut[0];
-									String formatGL2 = datefin[2] + "-" + datefin[1] + "-" + datefin[0];
-									System.out.println(formatGL1);
-									System.out.println(formatGL2);
-							        result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), formatGL1, formatGL2));
-								}
-							}
-						}
-						catch (NumberFormatException ex){
-							ex.printStackTrace();
-						}
-					}
-				}
-			}
+			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
+				command = dateAnalysis(command, settings);
+			
+			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
 		}
     }
+    
+    public List<String> dateAnalysis(List<String> command, Map<String, String> settings){
+    	command = addDateOption(command, settings, dateDebutOption, "--since=");
+    	command = addDateOption(command, settings, dateFinOption, "--until=");
+		
+		return command;
+    }
+    
+    public List<String> addDateOption(List<String> command, Map<String, String> settings, String parameterName, String gitOptionName){
+    		//On verifie qu'on a bien des clés parameterName
+    			if (settings.containsKey(parameterName)) {
+    				String debut = settings.get(parameterName);
+    				
+    				//On créé des tableux de notre string de date.
+    				String[] date = debut.split("/");
 
+    				//On verifie que l'on un tableau de dates de taille 3 chacuns pour le JJ/MM/AAAA.
+    				if (date.length == 3) {
+    					//On regarde si chaque partie de notre string est une date valide.
+    					try{
+    						int day = Integer.parseInt(date[0]);
+    						int mois = Integer.parseInt(date[1]);
+    						int annee = Integer.parseInt(date[2]);
+
+    						DateObj dateObj = new DateObj(day, mois, annee);
+
+    						//Regarde si les jours sont bien entre 1 et 31, les mois entre 1 et 12 etc. avec l'aide du constructeur de
+    						//la date
+    						if (dateObj.getDay() != 0 && dateObj.getIntMonth() != 0 && dateObj.getYear() != 0) {
+
+    							//Alors on passe nos parametres à la fonction. Gitlog prend le format AAAA/MM/JJ
+    							String formatGL1 = date[2] + "-" + date[1] + "-" + date[0];
+    							command.add(gitOptionName + formatGL1);
+    						}
+    					}
+    					catch (NumberFormatException ex){
+    						ex.printStackTrace();
+    					}
+    				}
+    			}
+    			
+    			return command;
+    }
+    
     @Override
     public Result getResult() {
     	//If the analysis hasn't already been run, it is run and only then is the result returned
@@ -172,7 +173,7 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         }
     }
     
-    private static class DateObj implements Comparable<DateObj>{
+    public static class DateObj implements Comparable<DateObj>{
     	private final int day;
     	private final int weekDay;
     	private final int month;

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Date;
+import java.util.LinkedList;
 import java.math.BigInteger;
 
 public class Commit {
@@ -27,31 +28,28 @@ public class Commit {
         this.description = description;
         this.mergedFrom = mergedFrom;
     }
-
-    public static BufferedReader executeGitCommand(Path gitPath,String command) {
-    	ProcessBuilder builder =
-                new ProcessBuilder("git", command).directory(gitPath.toFile());
+    
+    //a function that execute a command
+    public static BufferedReader executeGitCommand(Path gitPath,List<String> command) {
+    	command.add(0, "git");
+        ProcessBuilder builder = new ProcessBuilder(command).directory(gitPath.toFile());
         Process process;
         try {
             process = builder.start();
         } catch (IOException e) {
-            throw new RuntimeException("Error running \"git "+command+"\".", e);
+            String message="";
+            for(String s : command){
+                message=message+s+" ";
+            }
+            throw new RuntimeException("Error running \"git "+message+"\".", e);
         }
         InputStream is = process.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         return reader;
-    	
-    }
-    public static List<Commit> parseLogFromCommand(Path gitPath) {
-        return parseLogFromCommand(gitPath, null, null);
     }
     
-    public static List<Commit> parseLogFromCommand(Path gitPath, String date1, String date2) {
-        if (date1 != null && date2 != null) {
-            System.out.println("log --since=" + date1 + " --until=" + date2);
-            return parseLog(executeGitCommand(gitPath,"log --since=" + date1 + " --until=" + date2));
-        }
-        return parseLog(executeGitCommand(gitPath, "log"));
+    public static List<Commit> parseLogFromCommand(Path gitPath, List<String> args) {
+        return parseLog(executeGitCommand(gitPath, args));
     }
 
     public static List<Commit> parseLog(BufferedReader reader) {

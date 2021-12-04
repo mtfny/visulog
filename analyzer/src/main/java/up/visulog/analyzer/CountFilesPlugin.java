@@ -76,7 +76,7 @@ public class CountFilesPlugin implements AnalyzerPlugin {
 
 
     private static void parseError() {
-        throw new RuntimeException("Can't reqad files");
+        throw new RuntimeException("Can't read files");
     }
 
     static class Result implements AnalyzerPlugin.Result {
