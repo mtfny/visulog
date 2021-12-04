@@ -91,7 +91,7 @@ public class NumberOfLines{
         command.add("awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf \"added lines: %s, removed lines: %s, total lines: %s\\n\", add, subs, loc }'");
        
         
-        return parseNumberOfLines( executeCommand(command) );
+        return parseNumberOfLines( executeCommand(gitPath, command) );
     }
     
     public static List<NumberOfLines> parseNumberOfLines(BufferedReader reader) {
@@ -99,9 +99,9 @@ public class NumberOfLines{
        try {
 		String line = reader.readLine();
 		
-		/*if(line == null || line == "") {
+		if(line == null || line == "") {
 			return days;
-		} */
+		} 
 		
 		String split[] = line.split(" ");
 		ArrayList<String> splited = new ArrayList<String>();
