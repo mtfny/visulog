@@ -70,18 +70,38 @@ public class CLILauncher {
             //specifically want the program to do.
             if (arg.startsWith("--")) {
                 String[] parts = arg.split("=");
-                if (parts.length != 2) return Optional.empty();
+                 
+                if (parts.length ==1){
+                    //Commands that do not need parameters        
+                    String pName = parts[0];
+                    switch (pName) {
+                        case "--help" :
+                            help_txt();
+                           // help_command();
+                            break;
+
+                        case "--loadConfigFile":
+                        Configuration res = Configuration.loadConfigFile("../;config.txt");
+                        if(res != null && check_directory_exists(res.getGitPath().toString()) == true)
+                            return Optional.of(res);
+
+                        case "--justSaveConfigFile":
+                        	saveConfigFile = true;
+                        	break;
+                        
+                        default:
+                            return Optional.empty();
+                    }
+                }
+
+                else if (parts.length != 2) return Optional.empty();
+
                 else {
                     String pName = parts[0];
                     String pValue = parts[1];
                     switch (pName) {
                         case "--o" :
                             openHtml = true;
-                            break;
-
-                        case "--help" :
-                            help_txt();
-                           // help_command();
                             break;
 
                         case "--addPlugin":
