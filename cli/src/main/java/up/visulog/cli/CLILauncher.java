@@ -72,7 +72,7 @@ public class CLILauncher {
                 String[] parts = arg.split("=");
                  
                 if (parts.length ==1){
-                    //Commands that do not need parameters        
+                    //Commands that do not need parameters
                     String pName = parts[0];
                     switch (pName) {
                         case "--help" :
@@ -80,15 +80,10 @@ public class CLILauncher {
                            // help_command();
                             break;
 
-                        case "--loadConfigFile":
-                        Configuration res = Configuration.loadConfigFile("../;config.txt");
-                        if(res != null && check_directory_exists(res.getGitPath().toString()) == true)
-                            return Optional.of(res);
+                        case "--o" :
+                            openHtml = true;
+                            break;
 
-                        case "--justSaveConfigFile":
-                        	saveConfigFile = true;
-                        	break;
-                        
                         default:
                             return Optional.empty();
                     }
@@ -100,10 +95,6 @@ public class CLILauncher {
                     String pName = parts[0];
                     String pValue = parts[1];
                     switch (pName) {
-                        case "--o" :
-                            openHtml = true;
-                            break;
-
                         case "--addPlugin":
                         	if(!plugins.containsKey(pValue)) {
                         		addPlugin(pValue, plugins);
