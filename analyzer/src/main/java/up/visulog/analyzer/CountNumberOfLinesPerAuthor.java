@@ -52,11 +52,12 @@ public class CountNumberOfLinesPerAuthor implements AnalyzerPlugin{
         @Override
         //Method that returns a String which can then be used to display the PLpercentage list as an html page
         public String getResultAsHtmlDiv() {
-            StringBuilder html = new StringBuilder("<div>programming languages percentage: <ul>");
+            StringBuilder html = new StringBuilder("<div class=\"module\" hidden>linesPerContributor</div><div id=\"data-contributor-lines\" hidden>");
+            
             for (var item : NlinesPerAuthor) {
-                html.append("<li>").append(item.getName()).append(": ").append("lines added: ").append(item.getLines_added()).append("lines removed: ").append(item.getLines_removed()).append("total").append(item.getLines_added()-item.getLines_removed()).append("</li>");
+                html.append("<div data-contributor=\"").append(item.getName()).append("\">").append(item.getLines_added() + item.getLines_removed()).append("</div>");
             }
-            html.append("</ul></div>");
+            html.append("</div>");
             return html.toString();
         }
     }

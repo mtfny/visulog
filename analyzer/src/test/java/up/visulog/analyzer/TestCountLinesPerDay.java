@@ -18,7 +18,7 @@ public class TestCountLinesPerDay {
 		}
 		
 		//test update
-		NumberOfLines.Update(Today,3,4);
+		Today.Update(3,4);
 		assertEquals(Today.getAddDay(), 3);
 		assertEquals(Today.getDelDay(), 4);
 		
@@ -28,7 +28,7 @@ public class TestCountLinesPerDay {
 	public void checkSplit() {
 		String str = "added lines: 4123, removed lines: 920, total lines: 3203";
         String split[] = str.split(" ");
-        ArrayList<String> splited = new ArrayList();
+        ArrayList<String> splited = new ArrayList<String>();
 		int i =0;
 		
 		for(String s:split) {

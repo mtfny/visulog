@@ -34,14 +34,12 @@ public class CountMergeCommitsPlugin implements AnalyzerPlugin{
     	List<String> command = new LinkedList<String>();
     	command.add("log");
     	if(configuration != null) {
-			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerDay").getSettings();
+			Map<String, String> settings = configuration.getPluginConfigs().get("CountMergeCommits").getSettings();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
 				command = dateAnalysis(command, settings);
 			
 			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
 		}
-    		
-    	result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
     }
     
     public List<String> dateAnalysis(List<String> command, Map<String, String> settings){
@@ -113,7 +111,10 @@ public class CountMergeCommitsPlugin implements AnalyzerPlugin{
         @Override
       //Method that returns a String which can then be used with an html page
         public String getResultAsHtmlDiv() {
-            return "<div>Number Of Merge commits : "+getResultAsString()+" </div>";
+        	StringBuilder html = new StringBuilder("<div class=\"module\" hidden>mergeCounter</div><div id=\"data-merge-number\" hidden>");
+            html.append("<div data-merge-number=").append(NumberOfMergeCommits).append("></div>");
+            html.append("</div>");
+            return html.toString();
         }
     }
 
