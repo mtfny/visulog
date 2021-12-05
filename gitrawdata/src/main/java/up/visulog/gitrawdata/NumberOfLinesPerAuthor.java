@@ -28,31 +28,12 @@ public class NumberOfLinesPerAuthor {
     }
 
     //git log --pretty="%nName :%an %nDate :%ad" --numstat
-    //a function that execute a command
-    public static BufferedReader executeCommand(Path gitPath,List<String> command) {
-        ProcessBuilder builder = new ProcessBuilder( command).directory(gitPath.toFile());
-        Process process;
-        try {
-            process = builder.start();
-        } catch (IOException e) {
-            String message="";
-            for(String s : command){
-                message=message+s+" ";
-            }
-            throw new RuntimeException("Error running \"git "+message+"\".", e);
-        }
-        InputStream is = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        return reader;
-    }
-
     public static List<NumberOfLinesPerAuthor> parseLogFromCommand(Path gitPath) {
         List<String> command = new ArrayList<>();
-        command.add("git");
         command.add("log");
         command.add("--pretty=%nName :%an %nDate :%ad");
         command.add("--numstat");
-        return parseNumberOfLines( executeCommand(gitPath,command) );
+        return parseNumberOfLines(Commit.executeGitCommand(gitPath,command) );
     }
 
     public static List<NumberOfLinesPerAuthor> parseNumberOfLines(BufferedReader reader) {

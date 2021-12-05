@@ -3,6 +3,7 @@ package up.visulog.analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.time.LocalDate;
 
 import java.util.TreeMap;
@@ -25,7 +26,9 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     		return result;
     	
     	Calendar cal = Calendar.getInstance();
-    	
+
+
+		
     	//Two DateObj variables are created in order to retrieve the dates of both the earliest and latest commits contained in the gitLog list.
     	DateObj dateFirst = null;
     	DateObj dateLast = null;
@@ -66,10 +69,61 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
 
     @Override
     public void run() {
-    	if(configuration != null)
-    		result = processLog(Commit.parseLogFromCommand(configuration.getGitPath()));
+    	List<String> command = new LinkedList<String>();
+    	command.add("log");
+    	
+    	if(configuration != null) {
+			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerDay").getSettings();
+			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
+				command = dateAnalysis(command, settings);
+			
+			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
+		}
     }
+    
+    public List<String> dateAnalysis(List<String> command, Map<String, String> settings){
+    	command = addDateOption(command, settings, dateDebutOption, "--since=");
+    	command = addDateOption(command, settings, dateFinOption, "--until=");
+		
+		return command;
+    }
+    
+    public List<String> addDateOption(List<String> command, Map<String, String> settings, String parameterName, String gitOptionName){
+    		//On verifie qu'on a bien des clés parameterName
+    			if (settings.containsKey(parameterName)) {
+    				String debut = settings.get(parameterName);
+    				
+    				//On créé des tableux de notre string de date.
+    				String[] date = debut.split("/");
 
+    				//On verifie que l'on un tableau de dates de taille 3 chacuns pour le JJ/MM/AAAA.
+    				if (date.length == 3) {
+    					//On regarde si chaque partie de notre string est une date valide.
+    					try{
+    						int day = Integer.parseInt(date[0]);
+    						int mois = Integer.parseInt(date[1]);
+    						int annee = Integer.parseInt(date[2]);
+
+    						DateObj dateObj = new DateObj(day, mois, annee);
+
+    						//Regarde si les jours sont bien entre 1 et 31, les mois entre 1 et 12 etc. avec l'aide du constructeur de
+    						//la date
+    						if (dateObj.getDay() != 0 && dateObj.getIntMonth() != 0 && dateObj.getYear() != 0) {
+
+    							//Alors on passe nos parametres à la fonction. Gitlog prend le format AAAA/MM/JJ
+    							String formatGL1 = date[2] + "-" + date[1] + "-" + date[0];
+    							command.add(gitOptionName + formatGL1);
+    						}
+    					}
+    					catch (NumberFormatException ex){
+    						ex.printStackTrace();
+    					}
+    				}
+    			}
+    			
+    			return command;
+    }
+    
     @Override
     public Result getResult() {
     	//If the analysis hasn't already been run, it is run and only then is the result returned
@@ -119,14 +173,14 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
         }
     }
     
-    private static class DateObj implements Comparable<DateObj>{
+    public static class DateObj implements Comparable<DateObj>{
     	private final int day;
     	private final int weekDay;
     	private final int month;
     	private final int year;
     	private final String[] weekDays = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"};
 		private final String[] months = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre","Novembre", "Décembre"};
-    	
+
     	public DateObj(int day, int weekDay, int month, int year) {
     		this.day = day;
     		this.year = year;
@@ -137,9 +191,22 @@ public class CountCommitsPerDayPlugin implements AnalyzerPlugin {
     		this.weekDay = weekDay-1 < 0 || weekDay-1 >= weekDays.length ? 0 : weekDay-1;
     		this.month = month-1 < 0 || month-1 >= months.length ? 0 : month-1;
     	}
+
+		public DateObj(int day, int month, int year) {
+			if (day >= 1 && day <= 31) this.day = day;
+			else this.day = 0;
+
+			if (year >= 1990) this.year = year;
+			else this.year = 0;
+
+			if (month >= 1 && month <= 12) this.month = month;
+			else this.month = 0;
+			this.weekDay = 0;
+		}
     	
     	public int getDay() { return day; }
     	public String getWeekDay() { return weekDays[weekDay]; }
+		public int getIntMonth() { return month;}
     	public String getMonth() { return months[month]; }
     	public int getYear() { return year; }
     	public String monthAndYear() { return months[month].substring(0,3) + " " + String.valueOf(year);}
