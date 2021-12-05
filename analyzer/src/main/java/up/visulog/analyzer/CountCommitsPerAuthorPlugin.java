@@ -34,14 +34,13 @@ public class CountCommitsPerAuthorPlugin implements AnalyzerPlugin {
     	List<String> command = new LinkedList<String>();
     	command.add("log");
     	if(configuration != null) {
-			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerDay").getSettings();
+			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerAuthor").getSettings();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
 				command = dateAnalysis(command, settings);
 			
 			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
 		}
     		
-    	result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
     }
     
     public List<String> dateAnalysis(List<String> command, Map<String, String> settings){
