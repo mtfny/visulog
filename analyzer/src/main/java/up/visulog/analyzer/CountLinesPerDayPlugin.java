@@ -51,11 +51,12 @@ public class CountLinesPerDayPlugin implements AnalyzerPlugin{
 
 		@Override
 		public String getResultAsHtmlDiv() {
-			StringBuilder html = new StringBuilder("<div>Lines per Days: <ul>");
-            for (NumberOfLines item : data) {
-                html.append("<li>").append(item.getName()).append(": ").append("lines added: ").append(item.getAddDay()).append("lines removed: ").append(item.getDelDay()).append("total").append(item.getAddDay()-item.getDelDay()).append("</li>");
+			StringBuilder html = new StringBuilder("<div class=\"module\" hidden>linesPerDay</div><div id=\"data-lines-per-day\" hidden>");
+            
+            for (var item : data) {
+                html.append("<div data-date=\"").append(item.getDate() + "\"").append(item.getAddDay() + item.getDelDay()).append("</div>");
             }
-            html.append("</ul></div>");
+            html.append("</div>");
             return html.toString();
 		}
     	

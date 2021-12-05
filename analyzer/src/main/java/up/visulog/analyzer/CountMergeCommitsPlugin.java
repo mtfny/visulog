@@ -111,7 +111,10 @@ public class CountMergeCommitsPlugin implements AnalyzerPlugin{
         @Override
       //Method that returns a String which can then be used with an html page
         public String getResultAsHtmlDiv() {
-            return "<div>Number Of Merge commits : "+getResultAsString()+" </div>";
+        	StringBuilder html = new StringBuilder("<div class=\"module\" hidden>mergeCounter</div><div id=\"data-merge-number\" hidden>");
+            html.append("<div data-merge-number=").append(NumberOfMergeCommits).append("></div>");
+            html.append("</div>");
+            return html.toString();
         }
     }
 
