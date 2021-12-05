@@ -70,20 +70,31 @@ public class CLILauncher {
             //specifically want the program to do.
             if (arg.startsWith("--")) {
                 String[] parts = arg.split("=");
-                if (parts.length != 2) return Optional.empty();
-                else {
+                 
+                if (parts.length ==1){
+                    //Commands that do not need parameters
                     String pName = parts[0];
-                    String pValue = parts[1];
                     switch (pName) {
-                        case "--o" :
-                            openHtml = true;
-                            break;
-
                         case "--help" :
                             help_txt();
                            // help_command();
                             break;
 
+                        case "--o" :
+                            openHtml = true;
+                            break;
+
+                        default:
+                            return Optional.empty();
+                    }
+                }
+
+                else if (parts.length != 2) return Optional.empty();
+
+                else {
+                    String pName = parts[0];
+                    String pValue = parts[1];
+                    switch (pName) {
                         case "--addPlugin":
                         	if(!plugins.containsKey(pValue)) {
                         		addPlugin(pValue, plugins);
