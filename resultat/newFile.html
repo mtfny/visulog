@@ -10,36 +10,51 @@
 </head>
 <body>
     <div id="bubble" hidden></div>
-    <div id="container">
-        <div id="title-container">
-            <h1>Klee Project</h1>
+    <div id="menu">
+        <div id="menu-header">
+            <img src="./display/menuLogo.png" id="menu-logo-exit">
+            <h1>Menu</h1>
         </div>
-        <div class="project-info">
-            <div class="project-desc-container">
-                <div id="project-image">
-                    <img id="image" src="./display/kleeProject.jpg">
-                </div>
-                <div id="project-desc">
-                    <h3 id="project-desc-title" >Description :</h3>
-                    <p>Logiciel d'analyse de logs pour git.<br>Ceci est un début de projet proposé pour amélioration aux étudiants de pré-pro-2/conduite de projet.</p>
-                </div>
+        <div id="menu-link">
+        </div>
+    </div>
+    <div id="title-container">
+        <img src="./display/menuLogo.png" id="menu-logo">
+        <h1>Klee Project</h1>
+    </div>
+    
+    <div id="container">
+        <div class="project-desc-container">
+            
+            <div id="project-image">
+                <img id="image" src="./display/kleeProject.jpg">
             </div>
-            <div class="project-stat-container">
-                <h2>Commit Activity</h2>
-                <div class="project-stat-desc">
-                    <p></p>
-                </div>
-                <div class="project-stat">
-                    <div class="project-stat-display" style="position: relative">
-                        <div class="module" hidden>commitActivity</div><div id="grid-container"><div id="day-list"><div id="month-space"></div><div id="days-list-name"><p>Lun</p><p>Mar</p><p>Mer</p><p>Jeu</p><p>Ven</p><p>Sam</p><p>Dim</p></div></div><div id ="stats-grid"><p id="max-commit" hidden>10</p><div class="months"></div><div class="days" data-day-start="-1"></div></div></div>
+            <div id="project-desc">
+                <h3 id="project-desc-title" >Description :</h3>
+                <p>Logiciel d'analyse de logs pour git.<br>Ceci est un début de projet proposé pour amélioration aux étudiants de pré-pro-2/conduite de projet.</p>
+            </div>
+        </div>
+        <div id="module-container">
+            
+            <div class="project-info">
+                <div class="project-stat-container">
+                    <h2>Commit Activity</h2>
+                    <div class="project-stat-desc">
+                        <p></p>
+                    </div>
+                    <div class="project-stat">
+                        <div class="project-stat-display" style="position: relative">
 
+                            <div class="module" hidden>mergeCounter</div><div id="data-merge-number" hidden><div data-merge-number=53></div></div>
+
+
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
+    
 </body>
 </html>
 <script src="display/trying.js"></script>

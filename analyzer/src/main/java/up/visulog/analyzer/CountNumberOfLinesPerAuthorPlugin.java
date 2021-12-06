@@ -3,16 +3,15 @@ package up.visulog.analyzer;
 import java.util.*;
 
 import up.visulog.config.Configuration;
-import up.visulog.gitrawdata.Commit;
 import up.visulog.gitrawdata.NumberOfLinesPerAuthor;
 
 
 
-public class CountNumberOfLinesPerAuthor implements AnalyzerPlugin{
+public class CountNumberOfLinesPerAuthorPlugin implements AnalyzerPlugin{
     private final Configuration configuration;
     private Result result;
 
-    public CountNumberOfLinesPerAuthor(Configuration configuration) {
+    public CountNumberOfLinesPerAuthorPlugin(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -62,4 +61,3 @@ public class CountNumberOfLinesPerAuthor implements AnalyzerPlugin{
         }
     }
 }
-
