@@ -10,35 +10,50 @@
 </head>
 <body>
     <div id="bubble" hidden></div>
-    <div id="container">
-        <div id="title-container">
-            <h1>Klee Project</h1>
+    <div id="menu">
+        <div id="menu-header">
+            <img src="./display/menuLogo.png" id="menu-logo-exit">
+            <h1>Menu</h1>
         </div>
-        <div class="project-info">
-            <div class="project-desc-container">
-                <div id="project-image">
-                    <img id="image" src="./display/kleeProject.jpg">
-                </div>
-                <div id="project-desc">
-                    <h3 id="project-desc-title" >Description :</h3>
-                    <p>Logiciel d'analyse de logs pour git.<br>Ceci est un début de projet proposé pour amélioration aux étudiants de pré-pro-2/conduite de projet.</p>
-                </div>
+        <div id="menu-link">
+        </div>
+    </div>
+    <div id="title-container">
+        <img src="./display/menuLogo.png" id="menu-logo">
+        <h1>Klee Project</h1>
+    </div>
+    
+    <div id="container">
+        <div class="project-desc-container">
+            
+            <div id="project-image">
+                <img id="image" src="./display/kleeProject.jpg">
             </div>
-            <div class="project-stat-container">
-                <h2>Commit Activity</h2>
-                <div class="project-stat-desc">
-                    <p></p>
-                </div>
-                <div class="project-stat">
-                    <div class="project-stat-display" style="position: relative">
-                        $replace
+            <div id="project-desc">
+                <h3 id="project-desc-title" >Description :</h3>
+                <p>Logiciel d'analyse de logs pour git.<br>Ceci est un début de projet proposé pour amélioration aux étudiants de pré-pro-2/conduite de projet.</p>
+            </div>
+        </div>
+        <div id="module-container">
+            
+            <div class="project-info">
+                <div class="project-stat-container">
+                    <h2>Commit Activity</h2>
+                    <div class="project-stat-desc">
+                        <p></p>
+                    </div>
+                    <div class="project-stat">
+                        <div class="project-stat-display" style="position: relative">
+
+                            $replace
+
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
+    
 </body>
 </html>
 <script src="display/trying.js"></script>
