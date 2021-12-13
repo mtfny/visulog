@@ -1,5 +1,6 @@
 package up.visulog.config;
 
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.File;
@@ -16,14 +17,14 @@ public class Configuration implements java.io.Serializable {
 
 	//Paths are stored as a String so they can be serializable
     private final String gitPath;
-    private final String configFilePath; //Directory where the configuration file will be stored
     private final Map<String, PluginConfig> plugins;
-    private static final String configFileName = "config.txt";
+    private static final String configFolder = "../configFiles/"; //Directory where the configuration file will be stored
+    private final String configFileName; //Name of the configuration file given by the user
 	private boolean openHtml;
 
     public Configuration(String gitPath, String cfPath, Map<String, PluginConfig> plugins, boolean openHtml) {
         this.gitPath = gitPath;
-        this.configFilePath = cfPath;
+        this.configFileName = cfPath;
         this.plugins = deepCopy(plugins);
 		this.openHtml = openHtml;
     }
@@ -54,7 +55,7 @@ public class Configuration implements java.io.Serializable {
     		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(configFile));
     		oos.writeObject(this);
     		oos.close();
-    		System.out.println("Config file saved to " + configFilePath);
+    		System.out.println("Config file saved to " + configFile.getAbsolutePath());
     	}
     	
     	catch(IOException e) {
@@ -66,6 +67,7 @@ public class Configuration implements java.io.Serializable {
     //Loads a configuration file at the at the location passed as a parameter
     public static Configuration loadConfigFile(String configFilePath) {
     	try {
+    		configFilePath = FileSystems.getDefault().getPath(configFolder + configFilePath).toString();
     		File configFile = new File(configFilePath);
     		if(configFile.exists() && configFile.isFile()) {
     			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(configFile));
@@ -88,11 +90,9 @@ public class Configuration implements java.io.Serializable {
     
     //Returns configuration file if it exists, else it will create one
     private File getConfigFile(boolean createIfDoesNotExist) {
-		File configFile = new File(configFilePath);
-    	try {
-    		if(configFile.isDirectory())
-    			configFile = new File(configFilePath + File.pathSeparator + configFileName);
-    		
+    	String path = FileSystems.getDefault().getPath(configFolder + configFileName).toString();
+		File configFile = new File(path);
+    	try {    		
     		//Doesn't do anything if file already exists
     		if(createIfDoesNotExist)
     			configFile.createNewFile();

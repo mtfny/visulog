@@ -57,7 +57,7 @@ public class CLILauncher {
     static Optional<Configuration> makeConfigFromCommandLineArgs(String[] args) {
         //gitPath takes the current path visulog is located at, which is it's own folder.
         String gitPath = FileSystems.getDefault().getPath(".").toString();
-        String configFilePath = FileSystems.getDefault().getPath(".").toString();
+        String configFileName = FileSystems.getDefault().getPath(".").toString();
         boolean openHtml = false;
         boolean saveConfigFile = false;
 
@@ -103,12 +103,12 @@ public class CLILauncher {
                             
                         case "--justSaveConfigFile":
                         	saveConfigFile = true;
-                        	configFilePath = "../" + pValue;
+                        	configFileName = pValue;
                         	break;
                         	
                         case "--loadConfigFile":
-                        	configFilePath = "../" + pValue;
-                            Configuration res = Configuration.loadConfigFile(configFilePath);
+                        	configFileName = pValue;
+                            Configuration res = Configuration.loadConfigFile(configFileName);
                             if(res != null && check_directory_exists(res.getGitPath().toString()) == true)
                             	return Optional.of(res);
                             
@@ -130,13 +130,13 @@ public class CLILauncher {
             else {
                 //If we aren't passing a command that exists. We are changing the value of gitpath to the 
                 //argument we passed to check if we are passing a directory in our command line.
-                gitPath = FileSystems.getDefault().getPath(arg).toString();
+                gitPath = "../" + FileSystems.getDefault().getPath(arg).toString();
             }
         }
         //At the end we verify that everything is working by checking if the path in gitPath is
         //in an existing directory or not.
         if (check_directory_exists(gitPath)) {
-        	Configuration res = new Configuration(gitPath, configFilePath, plugins, openHtml);
+        	Configuration res = new Configuration(gitPath, configFileName, plugins, openHtml);
         	res.setPluginConfig(pluginConfig);
         	
         	if(saveConfigFile)
