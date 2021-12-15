@@ -1,6 +1,8 @@
 package up.visulog.gitrawdata;
 
 import java.io.BufferedReader;
+//import up.visulog.analyzer.CountCommitsPerDayPlugin;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,20 +13,25 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.nio.file.Path;
+import java.text.ParseException;
+
+
 
 public class NumberOfLines{
 	String name;
 	private int addDay;
 	private int delDay;
-	final LocalDate date;
+	private LocalDate date;
+	//private Date date;
 	private NumberOfLines yesterday;
 	
-	 private static List days = new ArrayList<NumberOfLines>();
+	 private static List<NumberOfLines> days = new ArrayList<NumberOfLines>();
 	
 	public NumberOfLines(int add,int del) {
-		this.date = LocalDate.now();
+		this.date = LocalDate.now() ;
 		this.name = this.date.toString();
-		
+	
 		int addlines;
 		int delLines;
 		
@@ -54,13 +61,13 @@ public class NumberOfLines{
 		
 	}
 	
-	public NumberOfLines() {
-		this.date = LocalDate.now();
+	public NumberOfLines(LocalDate date) {
+		this.date = date;
 		
 	}
 	
-	//git log --pretty=tformat: --numstat | awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf "added lines: %s, removed lines: %s, total lines: %s\n", add, subs, loc }' -
-    //we get all the lines 
+	//git diff --shortstat
+    //we get all the lines deleted and added today
     public static BufferedReader executeCommand(Path gitPath,List<String> command) {
         File f =gitPath.toFile();
         
@@ -85,49 +92,46 @@ public class NumberOfLines{
     
     public static List<NumberOfLines> parseLogFromCommand(Path gitPath) {
         List<String> command = new ArrayList<>();
-        command.add("log");
-        command.add("--pretty=tformat: --numstat");
-        command.add("|");
-        command.add("awk '{ add += $1; subs += $2; loc += $1 - $2 } END { printf \"added lines: %s, removed lines: %s, total lines: %s\\n\", add, subs, loc }'");
+        
+        //command.add("log");
+       // command.add("--pretty=%nName :%an %nDate :%ad");
+        //command.add("--numstat");
+        command.add("diff");
+        command.add("--shortstat");
+        
        
         
-        return parseNumberOfLines( executeCommand(gitPath, command) );
+        return parseNumberOfLines( Commit.executeGitCommand(gitPath, command) );
     }
     
     public static List<NumberOfLines> parseNumberOfLines(BufferedReader reader) {
     	
        try {
-		String line = reader.readLine();
-		
-		if(line == null || line == "") {
-			return days;
-		} 
-		
-		String split[] = line.split(" ");
-		ArrayList<String> splited = new ArrayList<String>();
-		int i =0;
-		
-		for(String s:split) {
-			String[] str = s.split(",",0);
-			splited.add(str[i]);
-		}
-		//the 3 values lines added,deleted and total lines are now into a tab
-		List <Integer> datas = getData(splited);
-		
-		if(((NumberOfLines) getDays().get(getDays().size()-1)).getDate().equals(LocalDate.now())) {
-			//if the day has already been analyzed we are doing an update 
-			((NumberOfLines) days.get(days.size()-1)).Update(datas.get(0),datas.get(1));
+    	   String line = reader.readLine();
+    	   // line look like " 3 files changed, 68 insertions(+), 43 deletions(-)"
+    	   String split[] = line.split(" ");
+			ArrayList<String> splited = new ArrayList<String>();
+			for(String s:split) {
+				splited.add(s);
+			}
+			//the 2 values lines added and deleted are now into a list
+			ArrayList<Integer> datas = getData(splited);
 			
-			return days;
-		}else {
-			//else create the day in the list
-			NumberOfLines newDay = new NumberOfLines(datas.get(0),datas.get(1));
-			return days;
-		}
+			//if the day has already been analyzed we are doing an update 
+			if(!days.isEmpty()) {
+				if(days.get(days.size()).date == LocalDate.now()) {
+					days.get(days.size()).Update(datas.get(1),datas.get(2));
+				}else {
+					NumberOfLines newDay = new NumberOfLines(datas.get(1),datas.get(2));
+				}
+			}
+			
+			NumberOfLines newDay = new NumberOfLines(datas.get(1),datas.get(2));
 		
-	} catch (IOException e) {
+			return days;
+		}catch (Exception e) {
+			e.printStackTrace();	
 		
-		e.printStackTrace();
 	}
         
 		return getDays();
@@ -193,9 +197,9 @@ public class NumberOfLines{
         return m.matches();
     }
 	
-	public static List<Integer> getData(ArrayList <String> splited) {
+	public static ArrayList<Integer> getData(ArrayList <String> splited) {
 		//put the numbers finded in a list
-		List <Integer> result = new ArrayList <Integer>();
+		ArrayList <Integer> result = new ArrayList <Integer>();
 		for(String s: splited) {
 			if(isNumber(s)) {
 				result.add(Integer.valueOf(s));
@@ -208,7 +212,7 @@ public class NumberOfLines{
 	
 	public void Update(int newadd,int newdel) {
 		//today is deleted and replace in the list
-		 NumberOfLines up = new NumberOfLines();
+		 NumberOfLines up = new NumberOfLines(this.date);
 		 
 		 if(this.yesterday!=null) {
 			 up.setYesterday(this.getYesterday());
@@ -231,8 +235,22 @@ public class NumberOfLines{
 		 days.add(up);
 	}
 	
-	
+	private static String getLastLine(BufferedReader reader) throws IOException {
+	    String line = null;
+	    String nextLine;
+	    while ((nextLine = reader.readLine()) != null) {
+	        line = nextLine;
+	    }
+	    return line;
 	}
+	 public static void main(String[] args) {
+	        Path gitPath = FileSystems.getDefault().getPath(".");
+	        var res=parseLogFromCommand(gitPath);
+	        System.out.println(res.toString());
+	    }
+	
+	
+}
 	
 	
 	
