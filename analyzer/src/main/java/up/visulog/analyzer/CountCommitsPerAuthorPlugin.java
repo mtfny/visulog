@@ -1,6 +1,5 @@
 package up.visulog.analyzer;
 
-import up.visulog.analyzer.CountCommitsPerDayPlugin.DateObj;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 
