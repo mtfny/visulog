@@ -29,6 +29,30 @@ public class Commit {
         this.mergedFrom = mergedFrom;
     }
     
+    public static List<String> getAllCommitsSHA(Path gitPath){
+    	List<String> command = new LinkedList<String>();
+    	command.add("log");
+    	command.add("--pretty=format:\"%H\"");
+    	BufferedReader reader = executeGitCommand(gitPath, command);
+    	
+    	List<String> SHAList = new LinkedList<String>();
+    	String line = null;
+    	
+		try {
+			line = reader.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+    	if(line == null)
+    		return SHAList;
+    	else {
+    		SHAList.add(line);
+    	}
+    	
+    	return null; //this is supposed to be unreachable
+    }
+    
     //a function that execute a command
     public static BufferedReader executeGitCommand(Path gitPath,List<String> command) {
     	command.add(0, "git");
