@@ -10,7 +10,7 @@ import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 import up.visulog.gitrawdata.NumberOfLinesPerAuthor;
 
-public class CountLinesPerDayPlugin extends DateAnalyzerPlugin{
+public class CountLinesPerDayPlugin implements DateAnalyzerPlugin{
 	private final Configuration configuration;
     private Result result;
     

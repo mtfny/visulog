@@ -5,7 +5,7 @@ import java.util.*;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.NumberOfLinesPerAuthor;
 
-public class CountNumberOfLinesPerAuthorPlugin extends DateAnalyzerPlugin{
+public class CountNumberOfLinesPerAuthorPlugin implements DateAnalyzerPlugin{
     private final Configuration configuration;
     private Result result;
 
@@ -25,7 +25,6 @@ public class CountNumberOfLinesPerAuthorPlugin extends DateAnalyzerPlugin{
 			
 			result = new Result(NumberOfLinesPerAuthor.parseLogFromCommand(configuration.getGitPath(), command));
 		}
-    	
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.Map;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 
-public class CountMergeCommitsPlugin extends DateAnalyzerPlugin{
+public class CountMergeCommitsPlugin implements DateAnalyzerPlugin{
 	private final Configuration configuration;
     private Result result;
     
@@ -32,6 +32,7 @@ public class CountMergeCommitsPlugin extends DateAnalyzerPlugin{
     public void run() {
     	List<String> command = new LinkedList<String>();
     	command.add("log");
+    	
     	if(configuration != null) {
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountMergeCommits").getSettings();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))

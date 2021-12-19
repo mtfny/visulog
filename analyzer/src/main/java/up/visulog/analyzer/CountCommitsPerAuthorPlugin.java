@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class CountCommitsPerAuthorPlugin extends DateAnalyzerPlugin {
+public class CountCommitsPerAuthorPlugin implements DateAnalyzerPlugin {
     private final Configuration configuration;
     private Result result;
 
@@ -32,6 +32,7 @@ public class CountCommitsPerAuthorPlugin extends DateAnalyzerPlugin {
     public void run() {
     	List<String> command = new LinkedList<String>();
     	command.add("log");
+    	
     	if(configuration != null) {
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerAuthor").getSettings();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
@@ -39,7 +40,6 @@ public class CountCommitsPerAuthorPlugin extends DateAnalyzerPlugin {
 			
 			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
 		}
-    		
     }
 
     @Override
