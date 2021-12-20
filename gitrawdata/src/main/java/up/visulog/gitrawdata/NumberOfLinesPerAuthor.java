@@ -28,12 +28,10 @@ public class NumberOfLinesPerAuthor {
     }
 
     //git log --pretty="%nName :%an %nDate :%ad" --numstat
-    public static List<NumberOfLinesPerAuthor> parseLogFromCommand(Path gitPath) {
-        List<String> command = new ArrayList<>();
-        command.add("log");
+    public static List<NumberOfLinesPerAuthor> parseLogFromCommand(Path gitPath, List<String> command) {
         command.add("--pretty=%nName :%an %nDate :%ad");
         command.add("--numstat");
-        return parseNumberOfLines(Commit.executeGitCommand(gitPath,command) );
+        return parseNumberOfLines(Commit.executeGitCommand(gitPath,command));
     }
 
     public static List<NumberOfLinesPerAuthor> parseNumberOfLines(BufferedReader reader) {
@@ -178,7 +176,7 @@ public class NumberOfLinesPerAuthor {
 
     public static void main(String[] args) {
         Path gitPath = FileSystems.getDefault().getPath(".");
-        var res=parseLogFromCommand(gitPath);
+        var res=parseLogFromCommand(gitPath, new ArrayList<String>());
         System.out.println(res.toString());
     }
 }
