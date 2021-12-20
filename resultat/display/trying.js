@@ -29,6 +29,7 @@ for (let i = 0; i<modulesArray.length; i++) {
     if(modulesArray[i].innerHTML === "fileCounter") {
         let fileInfo = {
             'title': "File Counter",
+            'type' : "files",
             'name' : "file-counter-anchor",
             'desc' : "Compte le nombre de fichier"
         }
@@ -52,6 +53,7 @@ for (let i = 0; i<modulesArray.length; i++) {
     if(modulesArray[i].innerHTML === "mergeCounter") {
         let mergeInfo = {
             'title': "Merge Number",
+            'type' : "merges",
             'name' : "merge-counter-anchor",
             'desc' : "Compte le nombre de merges effectué."
         }
@@ -119,7 +121,6 @@ function commitActivity(module) {
     }
 
     for (let i = 0; i<child.length; i++) {
-        console.log(window.pageYOffset)
         child[i].onmouseover = (element) => {
             bubble.removeAttribute("hidden");
             bubble.style.top = window.scrollY + element.target.getBoundingClientRect().y - 40 + "px";
@@ -144,7 +145,7 @@ function contributorActivity(module) {
     }
     let divs = placeTemplate(moduleInfo, [module, module.nextElementSibling]);
     let data = document.getElementById("data-contributor-activity");
-    let dataObject = convertToObject(data);
+    let dataObject = convertToContributorObject(data);
     let canvasParent;
     if (divs == null) {
         let description = document.getElementsByClassName("project-stat-desc")[moduleNumber].firstElementChild
@@ -154,8 +155,28 @@ function contributorActivity(module) {
         moduleContainer.appendChild(divs.projectInfo);
         canvasParent = divs.projectStatDisplay;
     }
+
+    divs.projectStatDisplay.style.borderBottomLeftRadius = "0";
+    divs.projectStatDisplay.style.borderBottomRightRadius = "0";
+
+
+    let parentCanvas = document.createElement('div');
+    if (dataObject.contributors.length > 18) {
+        parentCanvas.style.width = dataObject.contributors.length*45 + "px";
+
+        canvasParent.addEventListener('wheel', (event) => {
+            canvasParent.scrollLeft += (event.deltaY * 1.2);
+            event.preventDefault();
+        })
+    }
+    parentCanvas.style.overflowX = "hidden";
+    parentCanvas.style.height = "100%";
+
+    canvasParent.appendChild(parentCanvas);
     let canvasDiv = document.createElement("canvas");
-    canvasParent.appendChild(canvasDiv);
+    parentCanvas.appendChild(canvasDiv);
+
+    
 
     let myChart = new Chart(canvasDiv, {
         type: 'bar',
@@ -198,8 +219,9 @@ function moduleCounter(module, moduleInfo, name) {
     if (divs === null) {
         let description = document.getElementsByClassName("project-stat-desc")[0].firstElementChild;
         description.innerHTML = moduleInfo.desc;
-        let title = document.getElementsByClassName("project-desc-title")[0];
-        description.innerHTML = moduleInfo.name;
+        let title = document.getElementsByClassName("project-stat-container")[0].firstElementChild;
+        title.innerText = moduleInfo.title;
+        title.id = moduleInfo.name;
         parent = canvasParent = document.getElementsByClassName("project-stat-display")[0];
     }else {
         moduleContainer.appendChild(divs.projectInfo);
@@ -216,7 +238,7 @@ function moduleCounter(module, moduleInfo, name) {
     let fileNumberContainer = document.getElementById('data-' + name + '-number');
     let fileNumber = fileNumberContainer.firstElementChild.getAttribute('data-' + name + '-number');
     console.log(moduleInfo.name + " is ready !");
-    animateValue(divNumber, 0, fileNumber, 1000);
+    animateValue(divNumber, 0, fileNumber, 1000, moduleInfo.type);
 }
 /* ************ */
 
@@ -226,16 +248,17 @@ function linesPerDay(module) {
     let moduleInfo = {
         'title': "Lines Per Day",
         'name' : "lines-per-day-anchor",
-        'desc': "..."
+        'desc': "Represents the number of lines, added or modified per day on this project.\nThis plugin can also have as argument, an end and start date"
     }
     let divs = placeTemplate(moduleInfo, [module, module.nextElementSibling]);
     let parent;
     if (divs === null) {
         let description = document.getElementsByClassName("project-stat-desc")[0].firstElementChild;
         description.innerHTML = moduleInfo.desc;
-        let title = document.getElementsByClassName("project-desc-title")[0];
-        description.innerHTML = moduleInfo.name;
-        parent = document.getElementsByClassName("project-stat-display")[0];
+        let title = document.getElementsByClassName("project-stat-container")[0].firstElementChild;
+        title.innerText = moduleInfo.title;
+        title.id = moduleInfo.name;
+        parent = canvasParent = document.getElementsByClassName("project-stat-display")[0];
     }else {
         moduleContainer.appendChild(divs.projectInfo);
         parent = divs.projectStatDisplay;
@@ -243,9 +266,23 @@ function linesPerDay(module) {
 
     let dataDiv = document.getElementById("data-lines-per-day");
     let dataObject = getLinesPerDayData(dataDiv);
+    divs.projectStatDisplay.style.borderBottomLeftRadius = "0";
+    divs.projectStatDisplay.style.borderBottomRightRadius = "0";
 
+
+    let parentCanvas = document.createElement('div');
+    parentCanvas.style.width = dataObject.date.length*9 + "px";
+    parentCanvas.style.overflowX = "hidden";
+    parentCanvas.style.height = "100%";
+
+    parent.appendChild(parentCanvas);
     let canvasDiv = document.createElement("canvas");
-    parent.appendChild(canvasDiv);
+    parentCanvas.appendChild(canvasDiv);
+
+    parent.addEventListener('wheel', (event) => {
+        parent.scrollLeft += (event.deltaY * 1.2);
+        event.preventDefault();
+    })
 
     let myChart = new Chart(canvasDiv, {
         type: 'line',
@@ -293,8 +330,9 @@ function langageUsage(module) {
     if (divs === null) {
         let description = document.getElementsByClassName("project-stat-desc")[0].firstElementChild;
         description.innerHTML = moduleInfo.desc;
-        let title = document.getElementsByClassName("project-desc-title")[0];
-        description.innerHTML = moduleInfo.name;
+        let title = document.getElementsByClassName("project-stat-container")[0].firstElementChild;
+        title.innerText = moduleInfo.title;
+        title.id = moduleInfo.name;
         parent = canvasParent = document.getElementsByClassName("project-stat-display")[0];
     }else {
         moduleContainer.appendChild(divs.projectInfo);
@@ -359,8 +397,27 @@ function linesPerContributor(module) {
         moduleContainer.appendChild(divs.projectInfo);
         canvasParent = divs.projectStatDisplay;
     }
+
+    divs.projectStatDisplay.style.borderBottomLeftRadius = "0";
+    divs.projectStatDisplay.style.borderBottomRightRadius = "0";
+
+
+    let parentCanvas = document.createElement('div');
+    if (dataObject.contributors.length > 18) {
+        parentCanvas.style.width = dataObject.contributors.length*45 + "px";
+        canvasParent.addEventListener('wheel', (event) => {
+            canvasParent.scrollLeft += (event.deltaY * 1.2);
+            event.preventDefault();
+        })
+    }
+    parentCanvas.style.overflowX = "hidden";
+    parentCanvas.style.height = "100%";
+
+    canvasParent.appendChild(parentCanvas);
     let canvasDiv = document.createElement("canvas");
-    canvasParent.appendChild(canvasDiv);
+    parentCanvas.appendChild(canvasDiv);
+
+    
 
     let myChart = new Chart(canvasDiv, {
         type: 'bar',
@@ -409,6 +466,26 @@ function convertToObject(document) {
     return data;
 }
 
+function convertToContributorObject(document) {
+    let child = document.children;
+    let data = {
+        'contributors' : [],
+        'commitNumbers': []
+    }
+    for (let i = 0; i<child.length; i++) {
+        let string = child[i].getAttribute("data-contributor-name");
+        if (string.startsWith("unknown")) {
+            string = "Tounsi Yanis";
+        }else {
+            let index = string.indexOf("<");
+            string = string.substring(0, index-1);
+        }  
+        data.contributors.push(string);
+        data.commitNumbers.push(parseInt(child[i].innerHTML));
+    }
+    return data;
+}
+
 function getLinesData(document) {
     let child = document.children;
     let data = {
@@ -451,7 +528,7 @@ function getLinesPerDayData(document) {
 
 
 /* UTILS */
-function animateValue(element, start, end, duration) {
+function animateValue(element, start, end, duration, type) {
     if (start === end) return;
     var range = end - start;
     var current = start;
@@ -459,7 +536,7 @@ function animateValue(element, start, end, duration) {
     var stepTime = Math.abs(Math.floor(duration / range));
     var timer = setInterval(function() {
         current += increment;
-        element.innerHTML = current + " files";
+        element.innerHTML = current + " " + type;
         if (current == end) {
             clearInterval(timer);
         }
@@ -540,7 +617,7 @@ function createProjectInfoDiv(moduleTitle, moduleName, moduleDesc) {
 function placeTemplate(moduleInfo, element) {
     let anchor = document.createElement("a");
     anchor.classList.add("anchor");
-    anchor.setAttribute("href", "#" + moduleInfo.name);
+    anchor.setAttribute("data-anchor", moduleInfo.name);
     anchor.innerHTML = moduleInfo.title;
     anchor.onclick = hideSidebar;
     menuLink.appendChild(anchor);
@@ -568,7 +645,7 @@ function placeTemplate(moduleInfo, element) {
 let clickImgNumber = 0;
 let currentLinkNumber = 1;
 let imgLink = [
-    "https://www.fun-academy.fr/wp-content/uploads/2021/02/Genshin-Impact-Bennett-birthday-official-artwork-mihoyo-ps4-ps5-pc-switch-mobile-.jpg",
+    "./display/BennettProject",
     "./display/kleeProject.jpg"
 ];
 let img = document.getElementById('image');
@@ -602,6 +679,22 @@ menuLogoButton.onclick = () => {
 menuLogoExit.onclick = hideSidebar;
 
 function hideSidebar() {
-    menu.style.left = "-20vw";
+    console.log(menu.offsetWidth);
+    menu.style.left = "-" + menu.offsetWidth + "px";
     document.body.style.overflow = "";
+}
+
+for (let i = 0; i < anchor.length; i++) {
+    anchor[i].onclick = () => {
+        hideSidebar();
+        scrollToAnchor(anchor[i].getAttribute("data-anchor"))
+    }
+}
+
+function scrollToAnchor(url) {
+    let toScroll = $('#' + url).offset().top - 60;
+    if (toScroll<0) {toScroll = 0;}
+    $('html').animate({
+        scrollTop: toScroll
+    }, 2000);
 }
