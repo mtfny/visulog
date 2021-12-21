@@ -5,7 +5,7 @@ import up.visulog.gitrawdata.Commit;
 
 import java.util.*;
 
-public class CountCommitsPerAuthorPlugin implements DateAnalyzerPlugin {
+public class CountCommitsPerAuthorPlugin implements AnalyzerPlugin, DateAnalyzerPlugin {
     private final Configuration configuration;
     private Result result;
 
