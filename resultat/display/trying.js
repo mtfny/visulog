@@ -156,8 +156,8 @@ function contributorActivity(module) {
         canvasParent = divs.projectStatDisplay;
     }
 
-    divs.projectStatDisplay.style.borderBottomLeftRadius = "0";
-    divs.projectStatDisplay.style.borderBottomRightRadius = "0";
+    canvasParent.style.borderBottomLeftRadius = "0";
+    canvasParent.style.borderBottomRightRadius = "0";
 
 
     let parentCanvas = document.createElement('div');
@@ -266,8 +266,8 @@ function linesPerDay(module) {
 
     let dataDiv = document.getElementById("data-lines-per-day");
     let dataObject = getLinesPerDayData(dataDiv);
-    divs.projectStatDisplay.style.borderBottomLeftRadius = "0";
-    divs.projectStatDisplay.style.borderBottomRightRadius = "0";
+    parent.style.borderBottomLeftRadius = "0";
+    parent.style.borderBottomRightRadius = "0";
 
 
     let parentCanvas = document.createElement('div');
@@ -398,8 +398,8 @@ function linesPerContributor(module) {
         canvasParent = divs.projectStatDisplay;
     }
 
-    divs.projectStatDisplay.style.borderBottomLeftRadius = "0";
-    divs.projectStatDisplay.style.borderBottomRightRadius = "0";
+    canvasParent.style.borderBottomLeftRadius = "0";
+    canvasParent.style.borderBottomRightRadius = "0";
 
 
     let parentCanvas = document.createElement('div');
