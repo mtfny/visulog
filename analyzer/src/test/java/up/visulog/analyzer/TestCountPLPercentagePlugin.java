@@ -17,17 +17,18 @@ public class TestCountPLPercentagePlugin {
     //Tests the number of files
     @Test
     public  void checkSum() throws IOException, URISyntaxException {
-        //{Java=38.31325301204819, CSS=20.240963855421686, HTML=41.44578313253012}
+        //{Java=41.81818181818182, CSS=19.09090909090909, HTML=39.09090909090909}
         var uri = TestCountFilesPlugin.class.getClassLoader().getResource("fileTest").toURI();
         File file = new File(uri);
         CountPLPercentagePlugin.Result res =CountPLPercentagePlugin.getPL_percentage(file.toPath());
         HashMap<String , Double> expected=new HashMap<>();
-        expected.put("Java",38.31325301204819);
-        expected.put("CSS",20.240963855421686);
-        expected.put("HTML",41.44578313253012);
+
+        expected.put("Java",41.81818181818182);
+        expected.put("CSS",19.09090909090909);
+        expected.put("HTML",39.09090909090909);
         assertEquals(expected.size(), res.getPLpercentage().size());
         for (Map.Entry<String, Double> entry : res.getPLpercentage().entrySet()) {
-            //assertEquals(entry.getValue(),expected.get(entry.getKey()));
+            assertEquals(entry.getValue(),expected.get(entry.getKey()));
         }
     }
 

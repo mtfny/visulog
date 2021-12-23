@@ -3,10 +3,7 @@ package up.visulog.analyzer;
 import up.visulog.config.Configuration;
 import up.visulog.gitrawdata.Commit;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CountCommitsPerAuthorPlugin implements DateAnalyzerPlugin {
     private final Configuration configuration;
@@ -30,15 +27,19 @@ public class CountCommitsPerAuthorPlugin implements DateAnalyzerPlugin {
 
     @Override
     public void run() {
-    	List<String> command = new LinkedList<String>();
+    	List<String> command = new LinkedList<>();
     	command.add("log");
     	
     	if(configuration != null) {
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerAuthor").getSettings();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
 				command = dateAnalysis(command, settings);
-			
 			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
+            if(settings.containsKey(sortNumerically) || settings.containsKey(sortAlphabetically)){
+                if(settings.containsKey(sortAlphabetically)) result.sortValues();
+                if (settings.containsKey(sortNumerically))result.sortKeys();
+                if(settings.containsKey(reverse))result.reverse();
+            }
 		}
     }
 
@@ -50,9 +51,51 @@ public class CountCommitsPerAuthorPlugin implements DateAnalyzerPlugin {
     }
 
     static class Result implements AnalyzerPlugin.Result {
-        private final Map<String, Integer> commitsPerAuthor = new HashMap<>();
+        private  LinkedHashMap<String, Integer> commitsPerAuthor = new LinkedHashMap<>();
 
-        //Method that returns the hashmap that contains the number of commits associated with each author 
+        private void sortValues() {
+            LinkedList<Map.Entry<String,Integer>> list = new LinkedList<>(commitsPerAuthor.entrySet());
+            list.sort( (o1, o2) -> (o1.getValue()).compareTo(o2.getValue()));
+
+            //copying the sorted list in HashMap to preserve the iteration order
+            LinkedHashMap<String,Integer> sortedHashMap = new LinkedHashMap<>();
+            Iterator<Map.Entry<String,Integer>> it = list.iterator();
+
+            while (it.hasNext()) {
+                Map.Entry<String,Integer> entry = it.next();
+                sortedHashMap.put(entry.getKey(),entry.getValue());
+            }
+            commitsPerAuthor = sortedHashMap;
+        }
+        private void sortKeys() {
+            LinkedList<Map.Entry<String,Integer>> list = new LinkedList<>(commitsPerAuthor.entrySet());
+            list.sort( (o1, o2) -> (o1.getKey()).compareToIgnoreCase(o2.getKey()));
+
+            //copying the sorted list in HashMap to preserve the iteration order
+            LinkedHashMap<String,Integer> sortedHashMap = new LinkedHashMap<>();
+            Iterator<Map.Entry<String,Integer>> it = list.iterator();
+            while (it.hasNext()) {
+                Map.Entry<String,Integer> entry = it.next();
+                sortedHashMap.put(entry.getKey(),entry.getValue());
+            }
+            commitsPerAuthor = sortedHashMap;
+        }
+        private void reverse() {
+            LinkedList<Map.Entry<String,Integer>> list = new LinkedList<>(commitsPerAuthor.entrySet());
+            Collections.reverse(list);
+
+            //copying the sorted list in HashMap to preserve the iteration order
+            LinkedHashMap<String,Integer> sortedHashMap = new LinkedHashMap<>();
+            Iterator<Map.Entry<String,Integer>> it = list.iterator();
+            while (it.hasNext()) {
+                Map.Entry<String,Integer> entry = it.next();
+                sortedHashMap.put(entry.getKey(),entry.getValue());
+            }
+            commitsPerAuthor = sortedHashMap;
+        }
+
+
+    //Method that returns the hashmap that contains the number of commits associated with each author
         Map<String, Integer> getCommitsPerAuthor() {
             return commitsPerAuthor;
         }
