@@ -22,8 +22,12 @@ public class CountNumberOfLinesPerAuthorPlugin implements DateAnalyzerPlugin{
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountNumberOfLinesPerAuthor").getSettings();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
 				command = dateAnalysis(command, settings);
-			
 			result = new Result(NumberOfLinesPerAuthor.parseLogFromCommand(configuration.getGitPath(), command));
+            if(settings.containsKey(sortNumerically) || settings.containsKey(sortAlphabetically)){
+                if(settings.containsKey(sortAlphabetically)) result.sort_res_by_name();
+                if (settings.containsKey(sortNumerically))result.sort_res_by_lines();
+                if(settings.containsKey(reverse))result.reverse_order();
+            }
 		}
     }
 
@@ -43,6 +47,16 @@ public class CountNumberOfLinesPerAuthorPlugin implements DateAnalyzerPlugin{
 
         //Method that returns the hashmap that contains the percentage of each programmibng language
         public List<NumberOfLinesPerAuthor> getNlinesPerAuthor() { return NlinesPerAuthor; }
+
+        private void sort_res_by_name(){
+            Collections.sort(NlinesPerAuthor, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        }
+        private void sort_res_by_lines(){
+            Collections.sort(NlinesPerAuthor, (a, b) -> Integer.compare(a.getLines_added() - a.getLines_removed(), b.getLines_added() - b.getLines_removed()));
+        }
+        private void reverse_order(){
+            Collections.reverse(NlinesPerAuthor);
+        }
 
         @Override
         //Method that returns the PLpercentage list in String form
