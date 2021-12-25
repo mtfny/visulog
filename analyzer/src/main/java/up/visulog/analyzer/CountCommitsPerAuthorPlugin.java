@@ -32,13 +32,18 @@ public class CountCommitsPerAuthorPlugin implements AnalyzerPlugin, DateAnalyzer
     	
     	if(configuration != null) {
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountCommitsPerAuthor").getSettings();
+			List<String> options = configuration.getPluginConfigs().get("CountCommitsPerAuthor").getOptions();
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
 				command = dateAnalysis(command, settings);
 			result = processLog(Commit.parseLogFromCommand(configuration.getGitPath(), command));
-            if(settings.containsKey(sortNumerically) || settings.containsKey(sortAlphabetically)){
-                if(settings.containsKey(sortAlphabetically)) result.sortValues();
-                if (settings.containsKey(sortNumerically))result.sortKeys();
-                if(settings.containsKey(reverse))result.reverse();
+            if(options.contains(sortNumerically) || options.contains(sortAlphabetically)){
+                if(options.contains(sortAlphabetically))
+                	result.sortKeys();
+                else if (options.contains(sortNumerically))
+                	result.sortValues();
+                
+                if(options.contains(reverse))
+                	result.reverse();
             }
 		}
     }

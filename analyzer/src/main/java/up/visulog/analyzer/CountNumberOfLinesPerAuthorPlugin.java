@@ -20,13 +20,19 @@ public class CountNumberOfLinesPerAuthorPlugin implements AnalyzerPlugin, DateAn
     	
     	if(configuration != null) {
 			Map<String, String> settings = configuration.getPluginConfigs().get("CountNumberOfLinesPerAuthor").getSettings();
+			List<String> options = configuration.getPluginConfigs().get("CountNumberOfLinesPerAuthor").getOptions();
+			
 			if(settings.containsKey(dateDebutOption) || settings.containsKey(dateFinOption))
 				command = dateAnalysis(command, settings);
 			result = new Result(NumberOfLinesPerAuthor.parseLogFromCommand(configuration.getGitPath(), command));
-            if(settings.containsKey(sortNumerically) || settings.containsKey(sortAlphabetically)){
-                if(settings.containsKey(sortAlphabetically)) result.sort_res_by_name();
-                if (settings.containsKey(sortNumerically))result.sort_res_by_lines();
-                if(settings.containsKey(reverse))result.reverse_order();
+            if(options.contains(sortNumerically) || options.contains(sortAlphabetically)){
+                if(options.contains(sortAlphabetically))
+                	result.sort_res_by_name();
+                else if (options.contains(sortNumerically))
+                	result.sort_res_by_lines();
+                
+                if(options.contains(reverse))
+                	result.reverse_order();
             }
 		}
     }
@@ -52,7 +58,7 @@ public class CountNumberOfLinesPerAuthorPlugin implements AnalyzerPlugin, DateAn
             Collections.sort(NlinesPerAuthor, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
         }
         private void sort_res_by_lines(){
-            Collections.sort(NlinesPerAuthor, (a, b) -> Integer.compare(a.getLines_added() - a.getLines_removed(), b.getLines_added() - b.getLines_removed()));
+            Collections.sort(NlinesPerAuthor, (a, b) -> Integer.compare(a.getLines_added() + a.getLines_removed(), b.getLines_added() + b.getLines_removed()));
         }
         private void reverse_order(){
             Collections.reverse(NlinesPerAuthor);
