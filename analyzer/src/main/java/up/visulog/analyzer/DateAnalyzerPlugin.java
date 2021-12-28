@@ -3,7 +3,9 @@ package up.visulog.analyzer;
 import java.util.List;
 import java.util.Map;
 
-public interface DateAnalyzerPlugin extends AnalyzerPlugin {
+public interface DateAnalyzerPlugin  {
+	public static final String dateDebutOption = "-Debut";
+	public static final String dateFinOption = "-Fin";
 	
 	/*
 	 * Interface implemented by plugins that may take starting and/or ending dates into account during the analysis, if at least one such date is specified by the user

@@ -3,11 +3,9 @@ package up.visulog.analyzer;
 import java.lang.Runnable;
 
 public interface AnalyzerPlugin extends Runnable {
-	public static final String dateDebutOption = "-Debut";
-	public static final String dateFinOption = "-Fin";
-    public static final String sortAlphabetically = "-Alphabetically";
-    public static final String sortNumerically = "-Numerically";
-    public static final String reverse = "-Reverse";
+    public static final String sortAlphabetically = "-a";
+    public static final String sortNumerically = "-n";
+    public static final String reverse = "-r";
 	
     interface Result {
         String getResultAsString();
