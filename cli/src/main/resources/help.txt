@@ -5,10 +5,28 @@
 >>The path to your directory must contains a « .git » directory or else you will get an error message
 
 >>Here the list of commands you can type :
-	[--help]  -> Display the exact list.
-	
-	[—-addPlugin] -> Adds a plugin. Takes a plugin name as parameter.
-		[-—addPlugin=CountCommits]  -> Counts the numbers of commits  made.
+	* [--help]  -> Display the exact list.
 
-	[-—loadConfigFile] -> Save your parameters and quits the program.
-	[—-justSaveConfigFile] -> Loads your parameters from a file.
+	* [-—loadConfigFile=name] -> Saves the configuration and current options in a file passed in parameter.
+	* [—-justSaveConfigFile=name] -> Loads your parameters from the file passed in parameter and use it's configuration.
+	  All configuration files are located in the "configFiles" directory.
+
+	* [—-addPlugin=nameoftheplugin] -> Adds a plugin. Takes a plugin name as parameter.
+		[-—addPlugin=CountCommitsPerDay]  -> Counts the numbers of commits made per day.
+		[-—addPlugin=CountCommitsPerAuthor]  -> Counts the numbers of commits made per author.
+		[-—addPlugin=CountMergeCommits]  -> Counts the numbers of merge commits.
+		[-—addPlugin=CountLinesPerDay]  -> Counts the numbers of lines modified per day.
+		[-—addPlugin=CountNumberOfLinesPerAuthor]  -> Counts the numbers of lines modified per author.
+		[-—addPlugin=CountFiles]  -> Counts the numbers of files, ignores hidden files.
+		[-—addPlugin=CountPLPercentage ]  -> Prints out the percentage of each programming language.
+
+>>Options :
+	* [--o] -> Automatically opens the result in a web browser when the analysis is done.
+	* [-Debut=DD/MM/YYYY] -> Takes a beginning date for the analysis of certain plugins.
+	* [-Fin=DD/MM/YYYY] -> Takes an end date for the analysis of certain plugins.
+	* [-n] -> Sort results by number (can be used for CountCommitsPerAuthor and LinesPerAuthor)
+	* [-a] -> Sort results alphabetically (can be used for CommitsPerAuthor and LinesPerAuthor)
+	* [-r] -> Sort the results in descending order (only when using -n or -a)
+	  Priority goes to -a when both -a and -n are used.
+
+
