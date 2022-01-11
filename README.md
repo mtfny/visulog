@@ -15,6 +15,10 @@ This tool can:
 - analyze the variations of these indicators in time: for instance sum then in a week, compute a daily average or an average in a sliding window, ...
 - visualize the indicators as charts (histograms, pie charts, etc.) embedded in a generated web page.
 
+## How to use
+
+Watch the video tutorial here : https://www.youtube.com/watch?v=5IIXpCuinr4
+
 ## Already existing similar tools
 
 - [gitstats](https://pypi.org/project/gitstats/) 
